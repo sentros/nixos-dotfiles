@@ -18,14 +18,20 @@ in
       (import "${home-manager}/nixos")
     ];
 
+  # Use the systemd-boot EFI boot loader.
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+
   home-manager.useUserPackages = true;
   home-manager.useGlobalPkgs = true;
   home-manager.backupFileExtension = "backup";
   home-manager.users.john = import ./home.nix;
 
-  # Use the systemd-boot EFI boot loader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+  # Define a user account. Don't forget to set a password with ‘passwd’.
+  users.users.john = {
+    isNormalUser = true;
+    extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
+  };
 
   networking.hostName = "KINGKONG"; # Define your hostname.
 
@@ -77,17 +83,6 @@ in
   services.pipewire = {
     enable = true;
   #   pulse.enable = true;
-  };
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.john = {
-    isNormalUser = true;
-    extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
-    packages = with pkgs; [
-      tree
-      fastfetch
-      btop
-    ];
   };
 
   programs.firefox.enable = true;

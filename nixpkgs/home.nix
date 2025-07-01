@@ -9,8 +9,13 @@
     bat
     eza
     telegram-desktop
+    tree
+    fastfetch
+    btop
+    htop
   ];
 
+  # Configure idle times that lock / suspend machine in hyprland
   services.hypridle = {
     enable = true;
     settings = {
@@ -38,6 +43,7 @@
     };
   };
 
+  # Configure lock screen and behaviour in hyprland
   programs.hyprlock = {
     enable = true;
     settings = {
@@ -75,6 +81,7 @@
     };
   };
 
+  # Configure top bar in hyprland
   programs.waybar = {
     enable = true;
     systemd.enable = true;
@@ -97,11 +104,11 @@
       ];
 
       "hyprland/workspaces" = {
-	disable-scroll = true;
-	all-outputs = true;
-	wrap-on-scroll = false;
-	format = "{name}: {icon}";
-	format-icons = {
+        disable-scroll = true;
+        all-outputs = true;
+        wrap-on-scroll = false;
+        format = "{name}: {icon}";
+        format-icons = {
           urgent = "";
           active = "";
           default = "";
@@ -109,37 +116,37 @@
       };
 
       clock = {
-	timezone = "Europe/Helsinki";
-	tooltip-format = "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
-	format-alt = "{:%Y-%m-%d}";
+        timezone = "Europe/Helsinki";
+        tooltip-format = "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
+        format-alt = "{:%Y-%m-%d}";
       };
 
       cpu = {
-	format = "{usage}% ";
-	tooltip = false;
+        format = "{usage}% ";
+        tooltip = false;
       };
 
       memory = {
-	format = "{}% ";
+        format = "{}% ";
       };
 
       temperature = {
-	hwmon-path = "/sys/class/hwmon/hwmon2/temp1_input";
-	critical-threshold = 95;
-	format = "{temperatureC}°C ";
+        hwmon-path = "/sys/class/hwmon/hwmon2/temp1_input";
+        critical-threshold = 95;
+        format = "{temperatureC}°C ";
       };
 
       "systemd-failed-units" = {
-	hide-on-ok = false;
-	format = "✗ {nr_failed}";
-	format-ok = "✓";
-	system = true;
-	user = true;
+        hide-on-ok = false;
+        format = "✗ {nr_failed}";
+        format-ok = "✓";
+        system = true;
+        user = true;
       };
-
     };
   };
 
+  # Configure ssh to use 1password for keys
   programs.ssh = {
     enable = true;
     extraConfig = ''
@@ -150,6 +157,7 @@
 
   programs.eza.enableZshIntegration = true;
 
+  # zsh config
   programs.zsh = {
     enable = true;
     autosuggestion.enable = true;
@@ -175,6 +183,7 @@
     };
   };
 
+  # ghostty terminal config
   programs.ghostty = {
     enable = true;
     enableZshIntegration = true;
@@ -190,6 +199,7 @@
     };
   };
 
+  # Mangohud config to control and display fps etc in games
   programs.mangohud = {
     enable = true;
     settings = {
