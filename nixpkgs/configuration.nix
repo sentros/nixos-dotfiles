@@ -2,21 +2,26 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   # Set home manager version
-  home-manager = builtins.fetchTarball https://github.com/nix-community/home-manager/archive/release-25.05.tar.gz;
+  home-manager = builtins.fetchTarball "https://github.com/nix-community/home-manager/archive/release-25.05.tar.gz";
 in
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      # This is not included in git as it contains all kinds of ids
-      ./hardware-configuration.nix
-      # Include nvidia specific settings.
-      ./nvidia-hardware-configuration.nix
-      (import "${home-manager}/nixos")
-    ];
+  imports = [
+    # Include the results of the hardware scan.
+    # This is not included in git as it contains all kinds of ids
+    ./hardware-configuration.nix
+    # Include nvidia specific settings.
+    ./nvidia-hardware-configuration.nix
+    (import "${home-manager}/nixos")
+  ];
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
@@ -36,7 +41,7 @@ in
   networking.hostName = "KINGKONG"; # Define your hostname.
 
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-  networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
+  networking.networkmanager.enable = true; # Easiest to use and most distros use this by default.
 
   # Set your time zone.
   time.timeZone = "Europe/Helsinki";
@@ -44,9 +49,9 @@ in
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
   console = {
-  #   font = "Lat2-Terminus16";
+    #   font = "Lat2-Terminus16";
     keyMap = "fi";
-  #   useXkbConfig = true; # use xkb.options in tty.
+    #   useXkbConfig = true; # use xkb.options in tty.
   };
 
   # Use hyprland for DE
@@ -82,7 +87,7 @@ in
   # OR
   services.pipewire = {
     enable = true;
-  #   pulse.enable = true;
+    #   pulse.enable = true;
   };
 
   programs.firefox.enable = true;
@@ -98,7 +103,6 @@ in
     # require enabling PolKit integration on some desktop environments (e.g. Plasma).
     polkitPolicyOwners = [ "john" ];
   };
-
 
   # List packages installed in system profile.
   # You can use https://search.nixos.org/ to find more packages (and options).
