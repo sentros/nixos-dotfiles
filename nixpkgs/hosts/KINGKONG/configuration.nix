@@ -6,13 +6,10 @@
   config,
   lib,
   pkgs,
+  inputs,
   ...
 }:
 
-let
-  # Set home manager version
-  home-manager = builtins.fetchTarball "https://github.com/nix-community/home-manager/archive/release-25.05.tar.gz";
-in
 {
   imports = [
     # Include the results of the hardware scan.
@@ -20,23 +17,39 @@ in
     ./hardware-configuration.nix
     # Include nvidia specific settings.
     ./nvidia-hardware-configuration.nix
-    (import "${home-manager}/nixos")
+    # Hardware specific stuff
+    ./hardware.nix
+    # Main user creation
+    ./main-user.nix
+    inputs.home-manager.nixosModules.default
   ];
+
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
+  main-user.enable = true;
+  main-user.userName = "john";
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-
-  home-manager.useUserPackages = true;
-  home-manager.useGlobalPkgs = true;
-  home-manager.backupFileExtension = "backup";
-  home-manager.users.john = import ./home.nix;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.john = {
     isNormalUser = true;
     extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
   };
+
+  home-manager = {
+    extraSpecialArgs = { inherit inputs; };
+    backupFileExtension = "backup";
+    users = {
+      "john" = import ./home.nix;
+    };
+    useGlobalPkgs = true;
+    useUserPackages = true;
+  };
+
+  nixpkgs.config.allowUnfree = true;
 
   networking.hostName = "KINGKONG"; # Define your hostname.
 
@@ -75,9 +88,6 @@ in
   hardware.graphics = {
     enable = true;
   };
-
-  # At least nvidia drivers require unfree packages
-  nixpkgs.config.allowUnfree = true;
 
   # Enable CUPS to print documents.
   services.printing.enable = true;

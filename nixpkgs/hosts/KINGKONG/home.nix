@@ -170,6 +170,7 @@
     enableCompletion = true;
     shellAliases = {
       nrs = "sudo nixos-rebuild switch";
+      gc = "sudo nix-collect-garbage";
       ls = "eza";
       cat = "bat";
     };
