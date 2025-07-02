@@ -169,7 +169,7 @@
     autosuggestion.enable = true;
     enableCompletion = true;
     shellAliases = {
-      nrs = "sudo nixos-rebuild switch";
+      nrs = "sudo nixos-rebuild switch --flake /etc/nixos/hosts/#KINGKONG";
       gc = "sudo nix-collect-garbage";
       ls = "eza";
       cat = "bat";
@@ -240,6 +240,17 @@
       #     user = {
       #       signingKey = "...";
       #     };
+    };
+  };
+
+  programs.firefox = {
+    enable = true;
+    profiles = {
+      "default" = {
+        search.default = "ddg";
+        isDefault = true;
+        id = 0;
+      };
     };
   };
 }

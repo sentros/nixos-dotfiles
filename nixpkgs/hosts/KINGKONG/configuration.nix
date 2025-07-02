@@ -13,7 +13,7 @@
 {
   imports = [
     # Include the results of the hardware scan.
-    # This is not included in git as it contains all kinds of ids
+    # This is not included in git
     ./hardware-configuration.nix
     # Include nvidia specific settings.
     ./nvidia-hardware-configuration.nix
@@ -24,7 +24,10 @@
     inputs.home-manager.nixosModules.default
   ];
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
 
   main-user.enable = true;
   main-user.userName = "john";
@@ -41,7 +44,7 @@
 
   home-manager = {
     extraSpecialArgs = { inherit inputs; };
-    backupFileExtension = "backup";
+    backupFileExtension = "hm-backup";
     users = {
       "john" = import ./home.nix;
     };
@@ -100,12 +103,6 @@
     #   pulse.enable = true;
   };
 
-  programs.firefox.enable = true;
-
-  programs.neovim = {
-    enable = true;
-  };
-
   programs._1password.enable = true;
   programs._1password-gui = {
     enable = true;
@@ -117,7 +114,6 @@
   # List packages installed in system profile.
   # You can use https://search.nixos.org/ to find more packages (and options).
   environment.systemPackages = with pkgs; [
-    vim
     wget
     ghostty
     kitty
