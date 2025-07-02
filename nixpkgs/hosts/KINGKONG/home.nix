@@ -152,6 +152,16 @@
     };
   };
 
+  services.hyprpaper = {
+    enable = true;
+    settings = {
+      ipc = "on";
+      splash = false;
+      preload = [ "/home/john/wallpaper.jpg" ];
+      wallpaper = [ ",/home/john/wallpaper.jpg" ];
+    };
+  };
+
   # Configure ssh to use 1password for keys
   programs.ssh = {
     enable = true;
@@ -273,12 +283,5 @@
 
   programs.firefox = {
     enable = true;
-    profiles = {
-      "default" = {
-        search.default = "ddg";
-        isDefault = true;
-        id = 0;
-      };
-    };
   };
 }

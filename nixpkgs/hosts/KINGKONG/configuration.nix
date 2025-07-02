@@ -120,7 +120,6 @@
     wofi
     git
     vscode
-    hyprpaper
     hyprshot
     nautilus
     kdePackages.kwallet
