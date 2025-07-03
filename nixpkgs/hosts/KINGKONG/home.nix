@@ -301,28 +301,31 @@
     enable = true;
     systemd.enable = true;
     settings.mainBar = {
-      height = 30;
-      spacing = 4;
+      layer = "top";
+      position = "top";
+      spacing = 0;
+      height = 26;
 
       modules-left = [
         "hyprland/workspaces"
       ];
+
       modules-center = [
-        "hyprland/window"
+        "clock"
       ];
       modules-right = [
         "systemd-failed-units"
+        "bluetooth"
         "cpu"
         "memory"
         "temperature"
+        "network"
         "clock"
       ];
 
       "hyprland/workspaces" = {
-        disable-scroll = true;
-        all-outputs = true;
-        wrap-on-scroll = false;
-        format = "{name}: {icon}";
+        on-click = "activate";
+        format = "{icon}";
         format-icons = {
           urgent = "";
           active = "";
@@ -339,6 +342,7 @@
       cpu = {
         format = "{usage}% ";
         tooltip = false;
+        on-click = "ghostty -e btop";
       };
 
       memory = {
@@ -358,6 +362,47 @@
         system = true;
         user = true;
       };
+    style = ''
+    * {
+      color = #cdd6f4;
+      background-color: #1a1b26;
+      border: none;
+      border-radius: 0;
+      font-family: CaskaydiaMono Nerd Font;
+      font-size: 12px;
+    }
+
+    
+    #workspaces {
+      margin-left: 7px;
+    }
+
+    #workspaces button {
+      all: initial;
+      padding: 2px 6px;
+      margin-right: 3px;
+    }
+
+    #custom-dropbox,
+    #cpu,
+    #power-profiles-daemon,
+    #battery,
+    #network,
+    #bluetooth,
+    #pulseaudio,
+    #clock {
+      min-width: 12px;
+      margin-right: 13px;
+    }
+
+    tooltip {
+      padding: 2px;
+    }
+
+    tooltip label {
+      padding: 2px;
+    }
+    '';
     };
   };
 
@@ -493,4 +538,11 @@
   programs.firefox = {
     enable = true;
   };
+
+  programs.neovim = {
+    enable = true;
+    viAlias = true;
+    vimAlias = true;
+  };
+
 }

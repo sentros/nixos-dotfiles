@@ -133,6 +133,7 @@
     jetbrains-mono
     nerd-fonts.hack
     font-awesome
+    nerd-fonts.caskaydia-mono
   ];
 
   programs.steam = {
