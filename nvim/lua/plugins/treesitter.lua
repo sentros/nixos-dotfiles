@@ -12,7 +12,14 @@ return {
 	    indent = { enable = true },
 	    autotage = { enable = true },
 	    ensure_installed = {
-		"lua",
+            "lua",
+            "tsx",
+            "typescript",
+            "nix",
+            "yaml",
+            "hcl",
+            "dockerfile",
+            "bash"
 	    },
 	    auto_install = false,
 	})
