@@ -22,6 +22,8 @@
     # Main user creation
     ./main-user.nix
     inputs.home-manager.nixosModules.default
+    # neovim
+    ./nvf-configuration.nix
   ];
 
   nix.settings.experimental-features = [

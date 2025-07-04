@@ -7,10 +7,12 @@
     home-manager = {
       url = "github:nix-community/home-manager/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
+
+    nvf.url = "github:notashelf/nvf";
     };
   };
 
-  outputs = { self, nixpkgs, ... }@inputs:
+  outputs = { self, nixpkgs, nvf, ... }@inputs:
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
@@ -22,6 +24,7 @@
       modules = [
         ./hosts/KINGKONG/configuration.nix
         inputs.home-manager.nixosModules.default
+        nvf.nixosModules.default
       ];
     };
   };
