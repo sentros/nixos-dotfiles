@@ -3,9 +3,7 @@
   pkgs,
   lib,
   ...
-}:
-
-let 
+}: let
   customOhMyZshTheme = ''
     autoload -Uz vcs_info
 
@@ -35,8 +33,7 @@ let
   prependedZshCustom = ''
     export ZSH_CUSTOM="${config.home.homeDirectory}/.oh-my-zsh/custom"
   '';
-in
-{
+in {
   home.username = "john";
   home.homeDirectory = "/home/john";
   home.stateVersion = "25.05";
@@ -56,6 +53,14 @@ in
     tree
     nixfmt-rfc-style
   ];
+
+  gtk = {
+    enable = true;
+    theme = {
+      name = "Adwaita-dark";
+      package = pkgs.gnome-themes-extra;
+    };
+  };
 
   wayland.windowManager.hyprland = {
     enable = true;
@@ -457,20 +462,37 @@ in
       modules-right = [
         "systemd-failed-units"
         "bluetooth"
+        "network"
+        "wireplumber"
         "cpu"
         "memory"
         "temperature"
         "network"
-        "clock"
+        "custom/power-menu"
       ];
 
       "hyprland/workspaces" = {
         on-click = "activate";
         format = "{icon}";
         format-icons = {
-          urgent = "";
-          active = "";
-          default = "";
+          default = "";
+          "1" = 1;
+          "2" = 2;
+          "3" = 3;
+          "4" = 4;
+          "5" = 5;
+          "6" = 6;
+          "7" = 7;
+          "8" = 8;
+          "9" = 9;
+          active = "󱓻";
+        };
+        persistent-workspaces = {
+          "1" = "[]";
+          "2" = "[]";
+          "3" = "[]";
+          "4" = "[]";
+          "5" = "[]";
         };
       };
 
@@ -478,6 +500,19 @@ in
         timezone = "Europe/Helsinki";
         tooltip-format = "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
         format-alt = "{:%Y-%m-%d}";
+      };
+
+      network = {
+        format-icons = "[\"󰤯\",\"󰤟\",\"󰤢\",\"󰤥\",\"󰤨\"]";
+        format = "{icon}";
+        format-wifi = "{icon}";
+        format-ethernet = "󰀂";
+        format-disconnected = "󰖪";
+        tooltip-format-wifi = "{essid} ({frequency} GHz)\n⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}";
+        tooltip-format-ethernet = "⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}";
+        tooltip-format-disconnected = "Disconnected";
+        interval = 3;
+        nospacing = 1;
       };
 
       cpu = {
@@ -501,7 +536,7 @@ in
         format-disabled = "󰂲";
         format-connected = "";
         tooltip-format = "Devices connected: {num_connections}";
-        on-click = "GTK_THEME=Adwaita-dark blueberry";
+        on-click = "blueberry";
       };
 
       "systemd-failed-units" = {
@@ -510,6 +545,46 @@ in
         format-ok = "✓";
         system = true;
         user = true;
+      };
+      wireplumber = {
+        format = "";
+        format-muted = "󰝟";
+        scroll-step = 5;
+        on-click = "helvum";
+        tooltip-format = "Playinf at {volume}%";
+        on-click-right = "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle";
+      };
+      "custom/power-menu" = {
+        format = "󰐥";
+        tooltip = false;
+        on-click = pkgs.writeShellScript "power-menu" ''
+          #!/bin/bash
+
+          # Power menu from https://github.com/basecamp/omarchy/blob/master/bin/omarchy-power-menu
+          # Provides power off, restart, and sleep options
+
+          # Function to show power menu
+          show_power_menu() {
+            local menu_options="\u200B Lock
+          \u200C󰤄 Sleep
+          \u200D Relaunch
+          \u2060󰜉 Restart
+          󰐥\u2063 Shutdown" # These first characters are invisible sort keys
+
+            local selection=$(echo -e "$menu_options" | wofi --show dmenu --prompt "Power Options" --width 200 --height 250 -O alphabetical)
+
+            case "$selection" in
+            *Lock*) hyprlock ;;
+            *Sleep*) systemctl suspend ;;
+            *Relaunch*) hyprctl dispatch exit ;;
+            *Restart*) systemctl reboot ;;
+            *Shutdown*) systemctl poweroff ;;
+            esac
+          }
+
+          # Main execution
+          show_power_menu
+        '';
       };
       style = ''
         * {

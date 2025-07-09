@@ -11,13 +11,15 @@
     nvf.url = "github:notashelf/nvf";
   };
 
-  outputs = { self, nixpkgs, nvf, ... }@inputs:
-    let
-      system = "x86_64-linux";
-      pkgs = nixpkgs.legacyPackages.${system};
-    in
-    {
-
+  outputs = {
+    self,
+    nixpkgs,
+    nvf,
+    ...
+  } @ inputs: let
+    system = "x86_64-linux";
+    pkgs = nixpkgs.legacyPackages.${system};
+  in {
     nixosConfigurations.KINGKONG = nixpkgs.lib.nixosSystem {
       specialArgs = {inherit inputs;};
       modules = [

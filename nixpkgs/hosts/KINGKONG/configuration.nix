@@ -1,16 +1,13 @@
 # Edit this configuration file to define what should be installed on
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
-
 {
   config,
   lib,
   pkgs,
   inputs,
   ...
-}:
-
-{
+}: {
   imports = [
     # Include the results of the hardware scan.
     # This is not included in git
@@ -41,11 +38,11 @@
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.john = {
     isNormalUser = true;
-    extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
+    extraGroups = ["wheel"]; # Enable ‘sudo’ for the user.
   };
 
   home-manager = {
-    extraSpecialArgs = { inherit inputs; };
+    extraSpecialArgs = {inherit inputs;};
     backupFileExtension = "hm-backup";
     users = {
       "john" = import ./home.nix;
@@ -67,9 +64,7 @@
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
   console = {
-    #   font = "Lat2-Terminus16";
     keyMap = "fi";
-    #   useXkbConfig = true; # use xkb.options in tty.
   };
 
   # Use hyprland for DE
@@ -102,7 +97,9 @@
   # OR
   services.pipewire = {
     enable = true;
-    #   pulse.enable = true;
+    pulse.enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
   };
 
   programs._1password.enable = true;
@@ -110,7 +107,7 @@
     enable = true;
     # Certain features, including CLI integration and system authentication support,
     # require enabling PolKit integration on some desktop environments (e.g. Plasma).
-    polkitPolicyOwners = [ "john" ];
+    polkitPolicyOwners = ["john"];
   };
 
   # List packages installed in system profile.
@@ -131,6 +128,7 @@
     acpica-tools
     stress-ng
     blueberry
+    helvum
   ];
 
   fonts.packages = with pkgs; [
@@ -163,7 +161,7 @@
   services.openssh = {
     enable = true;
     settings = {
-      AllowUsers = [ "john" ];
+      AllowUsers = ["john"];
     };
   };
 
@@ -187,5 +185,4 @@
   #
   # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
   system.stateVersion = "25.05"; # Did you read the comment?
-
 }

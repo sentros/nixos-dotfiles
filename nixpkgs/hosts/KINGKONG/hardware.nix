@@ -1,6 +1,8 @@
-{ lib, config, ... }:
-
 {
+  lib,
+  config,
+  ...
+}: {
   # qmk for keyboard configuration
   hardware.keyboard.qmk.enable = true;
 

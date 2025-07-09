@@ -1,9 +1,11 @@
-{ lib, config, pkgs, ... }:
-
-let
-  cfg = config.main-user;
-in
 {
+  lib,
+  config,
+  pkgs,
+  ...
+}: let
+  cfg = config.main-user;
+in {
   options.main-user = {
     enable = lib.mkEnableOption "enable user module";
 
@@ -19,7 +21,7 @@ in
     users.users.${cfg.userName} = {
       isNormalUser = true;
       description = "main user";
-      extraGroups = [ "wheel" ]; # Enable sudo
+      extraGroups = ["wheel"]; # Enable sudo
     };
   };
 }
