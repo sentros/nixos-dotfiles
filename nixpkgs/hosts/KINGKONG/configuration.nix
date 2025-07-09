@@ -23,6 +23,7 @@
     ./main-user.nix
     inputs.home-manager.nixosModules.default
     ./amd-cpu.nix
+    ./nvf.nix
   ];
 
   nix.settings.experimental-features = [
@@ -128,6 +129,8 @@
     peazip
     lm_sensors
     acpica-tools
+    stress-ng
+    blueberry
   ];
 
   fonts.packages = with pkgs; [

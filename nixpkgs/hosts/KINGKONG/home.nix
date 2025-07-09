@@ -5,10 +5,49 @@
   ...
 }:
 
+let 
+  customOhMyZshTheme = ''
+    autoload -Uz vcs_info
+
+    zstyle ':vcs_info:*' stagedstr '%F{green}●'
+    zstyle ':vcs_info:*' unstagedstr '%F{yellow}●'
+    zstyle ':vcs_info:*' check-for-changes true
+    zstyle ':vcs_info:svn:*' branchformat '%b'
+    zstyle ':vcs_info:svn:*' formats ' [%b%F{1}:%F{11}%i%c%u%B%F{green}]'
+    zstyle ':vcs_info:*' enable git svn
+
+    theme_precmd () {
+      if [[ -z $(git ls-files --other --exclude-standard 2> /dev/null) ]]; then
+        zstyle ':vcs_info:git:*' formats ' [%b%c%u%B%F{green}]'
+      else
+        zstyle ':vcs_info:git:*' formats ' [%b%c%u%B%F{red}●%F{green}]'
+      fi
+
+      vcs_info
+    }
+
+    setopt prompt_subst
+    PROMPT='[%*] %B%F{magenta}%~%B%F{green}''${vcs_info_msg_0_}%B%F{magenta} %{$reset_color%}%% '
+
+    autoload -U add-zsh-hook
+    add-zsh-hook precmd  theme_precmd
+  '';
+  prependedZshCustom = ''
+    export ZSH_CUSTOM="${config.home.homeDirectory}/.oh-my-zsh/custom"
+  '';
+in
 {
   home.username = "john";
   home.homeDirectory = "/home/john";
   home.stateVersion = "25.05";
+
+  # write oh-my-zsh theme file
+  home.file.".oh-my-zsh/custom/themes/sentros.zsh-theme".text = customOhMyZshTheme;
+
+  # set path file to custom folder
+  home.file.".zshrc".text = ''
+    ${prependedZshCustom}
+  '';
 
   home.packages = with pkgs; [
     bat
@@ -218,7 +257,7 @@
 
         # Fix some dragging issues with XWayland
         windowrule = nofocus,class:^$,title:^$,xwayland:1,floating:1,fullscreen:0,pinned:0
-        windowrulev2 = opacity 0.9, class:^(com.mitchellh.ghostty)$ 
+        windowrulev2 = opacity 0.9, class:^(com.mitchellh.ghostty)$
 
         # unscale XWayland
         xwayland {
@@ -394,7 +433,6 @@
           fade_on_empty = false;
         }
       ];
-
     };
   };
 
@@ -452,9 +490,17 @@
       };
 
       temperature = {
-        hwmon-path = "/sys/class/hwmon/hwmon2/temp1_input";
+        hwmon-path = "/sys/class/hwmon/hwmon2/temp13_input";
         critical-threshold = 95;
         format = "{temperatureC}°C ";
+      };
+
+      bluetooth = {
+        format = "";
+        format-disabled = "󰂲";
+        format-connected = "";
+        tooltip-format = "Devices connected: {num_connections}";
+        on-click = "GTK_THEME=Adwaita-dark blueberry";
       };
 
       "systemd-failed-units" = {
@@ -464,47 +510,47 @@
         system = true;
         user = true;
       };
-    style = ''
-    * {
-      color = #cdd6f4;
-      background-color: #181824;
-      border: none;
-      border-radius: 0;
-      font-family: CaskaydiaMono Nerd Font;
-      font-size: 12px;
-    }
+      style = ''
+        * {
+          color = #cdd6f4;
+          background-color: #181824;
+          border: none;
+          border-radius: 0;
+          font-family: CaskaydiaMono Nerd Font;
+          font-size: 12px;
+        }
 
-    
-    #workspaces {
-      margin-left: 7px;
-    }
 
-    #workspaces button {
-      all: initial;
-      padding: 2px 6px;
-      margin-right: 3px;
-    }
+        #workspaces {
+          margin-left: 7px;
+        }
 
-    #custom-dropbox,
-    #cpu,
-    #power-profiles-daemon,
-    #battery,
-    #network,
-    #bluetooth,
-    #pulseaudio,
-    #clock {
-      min-width: 12px;
-      margin-right: 13px;
-    }
+        #workspaces button {
+          all: initial;
+          padding: 2px 6px;
+          margin-right: 3px;
+        }
 
-    tooltip {
-      padding: 2px;
-    }
+        #custom-dropbox,
+        #cpu,
+        #power-profiles-daemon,
+        #battery,
+        #network,
+        #bluetooth,
+        #pulseaudio,
+        #clock {
+          min-width: 12px;
+          margin-right: 13px;
+        }
 
-    tooltip label {
-      padding: 2px;
-    }
-    '';
+        tooltip {
+          padding: 2px;
+        }
+
+        tooltip label {
+          padding: 2px;
+        }
+      '';
     };
   };
 
@@ -513,8 +559,8 @@
     settings = {
       ipc = "on";
       splash = false;
-      preload = [ "/home/john/wallpaper.jpg" ];
-      wallpaper = [ ",/home/john/wallpaper.jpg" ];
+      preload = ["/home/john/wallpaper.jpg"];
+      wallpaper = [",/home/john/wallpaper.jpg"];
     };
   };
 
@@ -581,6 +627,7 @@
         "git"
         "sudo"
       ];
+      theme = "sentros";
     };
   };
 
@@ -667,12 +714,6 @@
     enable = true;
   };
 
-  programs.neovim = {
-    enable = true;
-    viAlias = true;
-    vimAlias = true;
-  };
-
   programs.btop = {
     enable = true;
     settings = {
@@ -711,7 +752,7 @@
       cpu_bottom = false;
       show_uptime = true;
       check_temp = true;
-      cpu_sensor = "Auto";
+      cpu_sensor = "nct6799/TSI0_TEMP";
       show_coretemp = true;
       #* Set a custom mapping between core and coretemp, can be needed on certain cpus to get correct temperature for correct core.
       #* Use lm-sensors or similar to see which cores are reporting temperatures on your machine.
@@ -816,144 +857,144 @@
     settings = {
       "$schema" = "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json";
       logo = {
-          padding = {
-              top = 5;
-              right = 6;
-          };
+        padding = {
+          top = 5;
+          right = 6;
+        };
       };
       modules = [
-          "break"
-          {
-              type = "custom";
-              format = "\u001b[90m┌──────────────────────Hardware──────────────────────┐";
-          }
-          {
-              type = "host";
-              key = " PC";
-              keyColor = "green";
-          }
-          {
-              type = "cpu";
-              key = "│ ├";
-              showPeCoreCount = true;
-              keyColor = "green";
-          }
-          {
-              type = "gpu";
-              key = "│ ├";
-              detectionMethod = "pci";
-              keyColor = "green";
-          }
-          {
-              type = "display";
-              key = "│ ├󱄄";
-              keyColor = "green";
-          }
-          {
-              type = "disk";
-              key = "│ ├󰋊";
-              keyColor = "green";
-          }
-          {
-              type = "memory";
-              key = "│ ├";
-              keyColor = "green";
-          }
-          {
-              type = "swap";
-              key = "└ └󰓡 ";
-              keyColor = "green";
-          }
-          {
-              type = "custom";
-              format = "\u001b[90m└────────────────────────────────────────────────────┘";
-          }
-          "break"
-          {
-              type = "custom";
-              format = "\u001b[90m┌──────────────────────Software──────────────────────┐";
-          }
-          {
-              type = "os";
-              key = " OS";
-              keyColor = "yellow";
-          }
-          {
-              type = "kernel";
-              key = "│ ├";
-              keyColor = "yellow";
-          }
-          {
-              type = "packages";
-              key = "│ ├󰏖";
-              keyColor = "yellow";
-          }
-          {
-              type = "shell";
-              key = "└ └";
-              keyColor = "yellow";
-          }
-          "break"
-          {
-              type = "de";
-              key = " DE";
-              keyColor = "blue";
-          }
-          {
-              type = "wm";
-              key = "│ ├";
-              keyColor = "blue";
-          }
-          {
-              type = "wmtheme";
-              key = "│ ├󰉼";
-              keyColor = "blue";
-          }
-          {
-              type = "icons";
-              key = "│ ├󰀻";
-              keyColor = "blue";
-          }
-          {
-              type = "cursor";
-              key = "│ ├";
-              keyColor = "blue";
-          }
-          {
-              type = "terminalfont";
-              key = "│ ├";
-              keyColor = "blue";
-          }
-          {
-              type = "terminal";
-              key = "└ └";
-              keyColor = "blue";
-          }
-          {
-              type = "custom";
-              format = "\u001b[90m└────────────────────────────────────────────────────┘";
-          }
-          "break"
-          {
-              type = "custom";
-              format = "\u001b[90m┌────────────────────Uptime / Age────────────────────┐";
-          }
-          {
-              type = "command";
-              key = "  OS Age ";
-              keyColor = "magenta";
-              text = "birth_install=$(stat -c %W /); current=$(date +%s); time_progression=$((current - birth_install)); days_difference=$((time_progression / 86400)); echo $days_difference days";
-          }
-          {
-              type = "uptime";
-              key = "  Uptime ";
-              keyColor = "magenta";
-          }
-          {
-              type = "custom";
-              format = "\u001b[90m└────────────────────────────────────────────────────┘";
-          }
-          "break"
+        "break"
+        {
+          type = "custom";
+          format = "\u001b[90m┌──────────────────────Hardware──────────────────────┐";
+        }
+        {
+          type = "host";
+          key = " PC";
+          keyColor = "green";
+        }
+        {
+          type = "cpu";
+          key = "│ ├";
+          showPeCoreCount = true;
+          keyColor = "green";
+        }
+        {
+          type = "gpu";
+          key = "│ ├";
+          detectionMethod = "pci";
+          keyColor = "green";
+        }
+        {
+          type = "display";
+          key = "│ ├󱄄";
+          keyColor = "green";
+        }
+        {
+          type = "disk";
+          key = "│ ├󰋊";
+          keyColor = "green";
+        }
+        {
+          type = "memory";
+          key = "│ ├";
+          keyColor = "green";
+        }
+        {
+          type = "swap";
+          key = "└ └󰓡 ";
+          keyColor = "green";
+        }
+        {
+          type = "custom";
+          format = "\u001b[90m└────────────────────────────────────────────────────┘";
+        }
+        "break"
+        {
+          type = "custom";
+          format = "\u001b[90m┌──────────────────────Software──────────────────────┐";
+        }
+        {
+          type = "os";
+          key = " OS";
+          keyColor = "yellow";
+        }
+        {
+          type = "kernel";
+          key = "│ ├";
+          keyColor = "yellow";
+        }
+        {
+          type = "packages";
+          key = "│ ├󰏖";
+          keyColor = "yellow";
+        }
+        {
+          type = "shell";
+          key = "└ └";
+          keyColor = "yellow";
+        }
+        "break"
+        {
+          type = "de";
+          key = " DE";
+          keyColor = "blue";
+        }
+        {
+          type = "wm";
+          key = "│ ├";
+          keyColor = "blue";
+        }
+        {
+          type = "wmtheme";
+          key = "│ ├󰉼";
+          keyColor = "blue";
+        }
+        {
+          type = "icons";
+          key = "│ ├󰀻";
+          keyColor = "blue";
+        }
+        {
+          type = "cursor";
+          key = "│ ├";
+          keyColor = "blue";
+        }
+        {
+          type = "terminalfont";
+          key = "│ ├";
+          keyColor = "blue";
+        }
+        {
+          type = "terminal";
+          key = "└ └";
+          keyColor = "blue";
+        }
+        {
+          type = "custom";
+          format = "\u001b[90m└────────────────────────────────────────────────────┘";
+        }
+        "break"
+        {
+          type = "custom";
+          format = "\u001b[90m┌────────────────────Uptime / Age────────────────────┐";
+        }
+        {
+          type = "command";
+          key = "  OS Age ";
+          keyColor = "magenta";
+          text = "birth_install=$(stat -c %W /); current=$(date +%s); time_progression=$((current - birth_install)); days_difference=$((time_progression / 86400)); echo $days_difference days";
+        }
+        {
+          type = "uptime";
+          key = "  Uptime ";
+          keyColor = "magenta";
+        }
+        {
+          type = "custom";
+          format = "\u001b[90m└────────────────────────────────────────────────────┘";
+        }
+        "break"
       ];
     };
   };
