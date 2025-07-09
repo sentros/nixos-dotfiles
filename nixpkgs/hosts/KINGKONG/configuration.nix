@@ -129,6 +129,7 @@
     stress-ng
     blueberry
     helvum
+    diff-so-fancy
   ];
 
   fonts.packages = with pkgs; [

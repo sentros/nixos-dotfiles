@@ -782,8 +782,8 @@ in {
       #     user = {
       #       signingKey = "...";
       #     };
-      diff-so-fancy.enable = true;
     };
+    diff-so-fancy.enable = true;
   };
 
   programs.firefox = {
