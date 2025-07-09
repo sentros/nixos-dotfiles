@@ -15,9 +15,6 @@
     eza
     telegram-desktop
     tree
-    fastfetch
-    btop
-    htop
     nixfmt-rfc-style
   ];
 
@@ -30,7 +27,7 @@
       # Set programs that you use
       $terminal = ghostty
       $fileManager = nautilus
-      $menu = wofi --show run
+      $menu = wofi
 
         # See https://wiki.hyprland.org/Configuring/Environment-variables/
 
@@ -45,7 +42,7 @@
             border_size = 2
 
             # https://wiki.hyprland.org/Configuring/Variables/#variable-types for info about colors
-            col.active_border = rgba(33ccffee) rgba(00ff99ee) 45deg
+            col.active_border = rgb(c6d0f5)
             col.inactive_border = rgba(595959aa)
 
             # Set to true enable resizing windows by clicking and dragging on borders and gaps
@@ -230,6 +227,101 @@
     '';
   };
 
+  programs.wofi = {
+    enable = true;
+    settings = {
+      width = 600;
+      height = 350;
+      location = "center";
+      show = "drun";
+      prompt = "Search...";
+      filter_rate = 100;
+      allow_markup = true;
+      no_actions = true;
+      halign = "fill";
+      orientation = "vertical";
+      content_halign = "fill";
+      insensitive = true;
+      allow_images = true;
+      image_size = 40;
+      gtk_dark = true;
+    };
+    style = ''
+      @define-color	selected-text  #8caaee;
+      @define-color	text  #c6d0f5;
+      @define-color	base  #24273a;
+
+      * {
+      font-family: 'CaskaydiaMono Nerd Font', monospace;
+      font-size: 18px;
+      }
+
+      window {
+      margin: 0px;
+      padding: 20px;
+      background-color: @base;
+      opacity: 0.95;
+      }
+
+      #inner-box {
+      margin: 0;
+      padding: 0;
+      border: none;
+      background-color: @base;
+      }
+
+      #outer-box {
+      margin: 0;
+      padding: 20px;
+      border: none;
+      background-color: @base;
+      }
+
+      #scroll {
+      margin: 0;
+      padding: 0;
+      border: none;
+      background-color: @base;
+      }
+
+      #input {
+      margin: 0;
+      padding: 10px;
+      border: none;
+      background-color: @base;
+      color: @text;
+      }
+
+      #input:focus {
+      outline: none;
+      box-shadow: none;
+      border: none;
+      }
+
+      #text {
+      margin: 5px;
+      border: none;
+      color: @text;
+      }
+
+      #entry {
+      background-color: @base;
+      }
+
+      #entry:selected {
+      outline: none;
+      border: none;
+      }
+
+      #entry:selected #text {
+      color: @selected-text;
+      }
+
+      #entry image {
+      -gtk-icon-transform: scale(0.7);
+      }
+    '';
+  };
   # Configure idle times that lock / suspend machine in hyprland
   services.hypridle = {
     enable = true;
@@ -264,32 +356,42 @@
     settings = {
       general = {
         disable_loading_bar = true;
-        grace = 300;
         hide_cursor = false;
         no_fade_in = false;
       };
 
       background = [
         {
-          path = "/home/john/wallpaper.jpg";
-          blur_passes = 3;
-          blur_size = 8;
+          color = "rgba(24,24,36,1.0)";
         }
       ];
 
+      animations = {
+        enabled = false;
+      };
+
       input-field = [
         {
-          size = "200, 50";
-          position = "0, -80";
+          size = "600, 100";
+          position = "0, 0";
           monitor = "";
-          dots_center = true;
+
+          inner_color = "rgba(24,24,36,0.8)";
+          outer_color = "rgba(205,214,244,1.0)";
+          outline_thickness = 4;
+
+          font_family = "CaskaydiaMono Nerd Font";
+          font_size = 32;
+          font_color = "rgba(205,214,244,1.0)";
+
+          placeholder_color = "rgba(205,214,244,0.6)";
+          placeholder_text = "Enter Password";
+          check_color = "rgba(68, 157, 171, 1.0)";
+          fail_text = "Wrong";
+
+          rounding = 0;
+          shadow_passes = 0;
           fade_on_empty = false;
-          font_color = "rgb(202, 211, 245)";
-          inner_color = "rgb(91, 96, 120)";
-          outer_color = "rgb(24, 25, 38)";
-          outline_thickness = 5;
-          placeholder_text = "<span foreground=\"##cad3f5\">Password...</span>";
-          shadow_passes = 2;
         }
       ];
 
@@ -365,7 +467,7 @@
     style = ''
     * {
       color = #cdd6f4;
-      background-color: #1a1b26;
+      background-color: #181824;
       border: none;
       border-radius: 0;
       font-family: CaskaydiaMono Nerd Font;
@@ -413,6 +515,31 @@
       splash = false;
       preload = [ "/home/john/wallpaper.jpg" ];
       wallpaper = [ ",/home/john/wallpaper.jpg" ];
+    };
+  };
+
+  services.mako = {
+    enable = true;
+    settings = {
+      text-color = "#cad3f5";
+      border-color = "#c6d0f5";
+      background-color = "#24273a";
+      width = 420;
+      height = 110;
+      padding = 10;
+      border-size = 2;
+      font = "Liberation Sans 11";
+      anchor = "top-right";
+      default-timeout = 5000;
+      max-icon-size = "32";
+
+      "mode=do-not-disturb" = {
+        invisible = true;
+      };
+
+      "mode=do-not-disturb app-name=notify-send" = {
+        invisible = false;
+      };
     };
   };
 
@@ -532,6 +659,7 @@
       #     user = {
       #       signingKey = "...";
       #     };
+      diff-so-fancy.enable = true;
     };
   };
 
@@ -545,4 +673,288 @@
     vimAlias = true;
   };
 
+  programs.btop = {
+    enable = true;
+    settings = {
+      color_theme = "catpuccin";
+      theme_background = true;
+      truecolor = true;
+      force_tty = false;
+      presets = "cpu:1:default,proc:0:default cpu:0:default,mem:0:default,net:0:default cpu:0:block,net:0:tty";
+      vim_keys = false;
+      rounded_corners = true;
+      graph_symbol = "braille";
+      graph_symbol_cpu = "default";
+      graph_symbol_gpu = "default";
+      graph_symbol_mem = "default";
+      graph_symbol_net = "default";
+      graph_symbol_proc = "default";
+      shown_boxes = "cpu mem net proc";
+      update_ms = 2000;
+      proc_sorting = "cpu lazy";
+      proc_reversed = false;
+      proc_tree = false;
+      proc_colors = true;
+      proc_gradient = true;
+      proc_per_core = false;
+      proc_mem_bytes = true;
+      proc_cpu_graphs = true;
+      proc_info_smaps = false;
+      proc_left = false;
+      proc_filter_kernel = false;
+      proc_aggregate = false;
+      cpu_graph_upper = "Auto";
+      cpu_graph_lower = "Auto";
+      show_gpu_info = "Auto";
+      cpu_invert_lower = true;
+      cpu_single_graph = false;
+      cpu_bottom = false;
+      show_uptime = true;
+      check_temp = true;
+      cpu_sensor = "Auto";
+      show_coretemp = true;
+      #* Set a custom mapping between core and coretemp, can be needed on certain cpus to get correct temperature for correct core.
+      #* Use lm-sensors or similar to see which cores are reporting temperatures on your machine.
+      #* Format "x:y" x=core with wrong temp, y=core with correct temp, use space as separator between multiple entries.
+      #* Example: "4:0 5:1 6:3"
+      cpu_core_map = "";
+      temp_scale = "celsius";
+      base_10_sizes = false;
+      show_cpu_freq = true;
+      clock_format = "%X";
+      background_update = true;
+      custom_cpu_name = "";
+      disks_filter = "";
+      mem_graphs = true;
+      mem_below_net = false;
+      zfs_arc_cached = true;
+      show_swap = true;
+      swap_disk = true;
+      show_disks = true;
+      only_physical = true;
+      use_fstab = true;
+      zfs_hide_datasets = false;
+      disk_free_priv = false;
+      show_io_stat = true;
+      io_mode = false;
+      io_graph_combined = false;
+      io_graph_speeds = "";
+
+      #* Set fixed values for network graphs in Mebibits. Is only used if net_auto is also set to False.
+      net_download = 100;
+      net_upload = 100;
+
+      #* Use network graphs auto rescaling mode, ignores any values set above and rescales down to 10 Kibibytes at the lowest.
+      net_auto = true;
+
+      #* Sync the auto scaling for download and upload to whichever currently has the highest scale.
+      net_sync = true;
+
+      #* Starts with the Network Interface specified here.
+      net_iface = "";
+      show_battery = true;
+      selected_battery = "Auto";
+      log_level = "WARNING";
+      nvml_measure_pcie_speeds = true;
+      gpu_mirror_graph = true;
+      custom_gpu_name0 = "";
+      custom_gpu_name1 = "";
+      custom_gpu_name2 = "";
+      custom_gpu_name3 = "";
+      custom_gpu_name4 = "";
+      custom_gpu_name5 = "";
+    };
+    themes = {
+      catppuccin = ''
+        theme[main_bg]="#24273a"
+        theme[main_fg]="#c6d0f5"
+        theme[title]="#c6d0f5"
+        theme[hi_fg]="#8caaee"
+        theme[selected_bg]="#51576d"
+        theme[selected_fg]="#8caaee"
+        theme[inactive_fg]="#838ba7"
+        theme[graph_text]="#f2d5cf"
+        theme[meter_bg]="#51576d"
+        theme[proc_misc]="#f2d5cf"
+        theme[cpu_box]="#ca9ee6" #Mauve
+        theme[mem_box]="#a6d189" #Green
+        theme[net_box]="#ea999c" #Maroon
+        theme[proc_box]="#8caaee" #Blue
+        theme[div_line]="#737994"
+        theme[temp_start]="#a6d189"
+        theme[temp_mid]="#e5c890"
+        theme[temp_end]="#e78284"
+        theme[cpu_start]="#81c8be"
+        theme[cpu_mid]="#85c1dc"
+        theme[cpu_end]="#babbf1"
+        theme[free_start]="#ca9ee6"
+        theme[free_mid]="#babbf1"
+        theme[free_end]="#8caaee"
+        theme[cached_start]="#85c1dc"
+        theme[cached_mid]="#8caaee"
+        theme[cached_end]="#babbf1"
+        theme[available_start]="#ef9f76"
+        theme[available_mid]="#ea999c"
+        theme[available_end]="#e78284"
+        theme[used_start]="#a6d189"
+        theme[used_mid]="#81c8be"
+        theme[used_end]="#99d1db"
+        theme[download_start]="#ef9f76"
+        theme[download_mid]="#ea999c"
+        theme[download_end]="#e78284"
+        theme[upload_start]="#a6d189"
+        theme[upload_mid]="#81c8be"
+        theme[upload_end]="#99d1db"
+        theme[process_start]="#85c1dc"
+        theme[process_mid]="#babbf1"
+        theme[process_end]="#ca9ee6"
+      '';
+    };
+  };
+  programs.fastfetch = {
+    enable = true;
+    settings = {
+      "$schema" = "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json";
+      logo = {
+          padding = {
+              top = 5;
+              right = 6;
+          };
+      };
+      modules = [
+          "break"
+          {
+              type = "custom";
+              format = "\u001b[90m┌──────────────────────Hardware──────────────────────┐";
+          }
+          {
+              type = "host";
+              key = " PC";
+              keyColor = "green";
+          }
+          {
+              type = "cpu";
+              key = "│ ├";
+              showPeCoreCount = true;
+              keyColor = "green";
+          }
+          {
+              type = "gpu";
+              key = "│ ├";
+              detectionMethod = "pci";
+              keyColor = "green";
+          }
+          {
+              type = "display";
+              key = "│ ├󱄄";
+              keyColor = "green";
+          }
+          {
+              type = "disk";
+              key = "│ ├󰋊";
+              keyColor = "green";
+          }
+          {
+              type = "memory";
+              key = "│ ├";
+              keyColor = "green";
+          }
+          {
+              type = "swap";
+              key = "└ └󰓡 ";
+              keyColor = "green";
+          }
+          {
+              type = "custom";
+              format = "\u001b[90m└────────────────────────────────────────────────────┘";
+          }
+          "break"
+          {
+              type = "custom";
+              format = "\u001b[90m┌──────────────────────Software──────────────────────┐";
+          }
+          {
+              type = "os";
+              key = " OS";
+              keyColor = "yellow";
+          }
+          {
+              type = "kernel";
+              key = "│ ├";
+              keyColor = "yellow";
+          }
+          {
+              type = "packages";
+              key = "│ ├󰏖";
+              keyColor = "yellow";
+          }
+          {
+              type = "shell";
+              key = "└ └";
+              keyColor = "yellow";
+          }
+          "break"
+          {
+              type = "de";
+              key = " DE";
+              keyColor = "blue";
+          }
+          {
+              type = "wm";
+              key = "│ ├";
+              keyColor = "blue";
+          }
+          {
+              type = "wmtheme";
+              key = "│ ├󰉼";
+              keyColor = "blue";
+          }
+          {
+              type = "icons";
+              key = "│ ├󰀻";
+              keyColor = "blue";
+          }
+          {
+              type = "cursor";
+              key = "│ ├";
+              keyColor = "blue";
+          }
+          {
+              type = "terminalfont";
+              key = "│ ├";
+              keyColor = "blue";
+          }
+          {
+              type = "terminal";
+              key = "└ └";
+              keyColor = "blue";
+          }
+          {
+              type = "custom";
+              format = "\u001b[90m└────────────────────────────────────────────────────┘";
+          }
+          "break"
+          {
+              type = "custom";
+              format = "\u001b[90m┌────────────────────Uptime / Age────────────────────┐";
+          }
+          {
+              type = "command";
+              key = "  OS Age ";
+              keyColor = "magenta";
+              text = "birth_install=$(stat -c %W /); current=$(date +%s); time_progression=$((current - birth_install)); days_difference=$((time_progression / 86400)); echo $days_difference days";
+          }
+          {
+              type = "uptime";
+              key = "  Uptime ";
+              keyColor = "magenta";
+          }
+          {
+              type = "custom";
+              format = "\u001b[90m└────────────────────────────────────────────────────┘";
+          }
+          "break"
+      ];
+    };
+  };
 }

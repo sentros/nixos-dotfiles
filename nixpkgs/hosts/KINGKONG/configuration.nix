@@ -22,6 +22,7 @@
     # Main user creation
     ./main-user.nix
     inputs.home-manager.nixosModules.default
+    ./amd-cpu.nix
   ];
 
   nix.settings.experimental-features = [
@@ -117,7 +118,6 @@
     wget
     ghostty
     kitty
-    wofi
     git
     vscode
     hyprshot
@@ -126,7 +126,8 @@
     dig
     killall
     peazip
-    swaynotificationcenter
+    lm_sensors
+    acpica-tools
   ];
 
   fonts.packages = with pkgs; [
@@ -143,6 +144,11 @@
   programs.appimage.enable = true;
   programs.appimage.binfmt = true;
 
+  programs.coolercontrol = {
+    enable = true;
+    nvidiaSupport = true;
+  };
+
   # Add kwallet for credential storage. F.ex. vscode needs it to store github creds
   security = {
     pam.services.kwallet = {
@@ -150,6 +156,15 @@
       enableKwallet = true;
     };
   };
+
+  services.openssh = {
+    enable = true;
+    settings = {
+      AllowUsers = [ "john" ];
+    };
+  };
+
+  networking.interfaces.eno1.wakeOnLan.enable = true;
 
   # This option defines the first version of NixOS you have installed on this particular machine,
   # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.
