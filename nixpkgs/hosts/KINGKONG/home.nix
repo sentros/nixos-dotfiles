@@ -206,6 +206,7 @@ in
         bind = $mainMod, P, pseudo, # dwindle
         bind = $mainMod, J, togglesplit, # dwindle
         bind = $mainMod, F12, exec, hyprshot -m output
+        bind = $mainMod, L, exec, loginctl lock-session
 
         # Move focus with mainMod + arrow keys
         bind = $mainMod, left, movefocus, l
