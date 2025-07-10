@@ -130,6 +130,7 @@
     blueberry
     helvum
     diff-so-fancy
+    wayland-utils
   ];
 
   fonts.packages = with pkgs; [

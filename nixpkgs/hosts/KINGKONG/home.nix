@@ -52,6 +52,7 @@ in {
     telegram-desktop
     tree
     nixfmt-rfc-style
+    libreoffice
   ];
 
   gtk = {
@@ -66,7 +67,7 @@ in {
     enable = true;
     extraConfig = ''
       # See https://wiki.hyprland.org/Configuring/Monitors/
-      monitor=, 3840x2160@119.88Hz, 0x0, 2, vrr, 1, bitdepth, 10, cm, wide
+      monitor=, 3840x2160@119.88Hz, 0x0, 1.6, vrr, 1, bitdepth, 10, cm, wide
 
       # Set programs that you use
       $terminal = ghostty
@@ -707,6 +708,34 @@ in {
     };
   };
 
+  programs.tmux = {
+    enable = true;
+    shell = "${pkgs.zsh}/bin/zsh";
+    clock24 = true;
+    keyMode = "vi";
+    mouse = true;
+    shortcut = "a";
+    terminal = "tmux-256color";
+    extraConfig = ''
+      set-option -g status-position top
+    '';
+    plugins = with pkgs; [
+      {
+        plugin = tmuxPlugins.catppuccin;
+        extraConfig = ''
+          set -g @catppuccin_flavor "mocha"
+          set -g @catppuccin_window_status_style "rounded"
+          set -g status-right-length 100
+          set -g status-left-length 100
+          set -g status-left ""
+          set -g status-right "#{E:@catppuccin_status_application}"
+          set -ag status-right "#{E:@catppuccin_status_session}"
+          set -ag status-right "#{E:@catppuccin_status_uptime}"
+        '';
+      }
+    ];
+  };
+
   # ghostty terminal config
   programs.ghostty = {
     enable = true;
@@ -717,37 +746,9 @@ in {
       clipboard-read = "allow";
       clipboard-write = "allow";
       window-theme = "dark";
-      theme = "monokai-pro";
+      theme = "catppuccin-mocha";
       font-size = 12;
       font-family = "Hack";
-    };
-    themes = {
-      monokai-pro = {
-        background = "2d2a2e";
-        cursor-color = "c1c0c0";
-        cursor-text = "c1c0c0";
-        foreground = "fcfcfa";
-        palette = [
-          "0=#2d2a2e"
-          "1=#ff6188"
-          "2=#a9dc76"
-          "3=#ffd866"
-          "4=#fc9867"
-          "5=#ab9df2"
-          "6=#78dce8"
-          "7=#fcfcfa"
-          "8=#727072"
-          "9=#ff6188"
-          "10=#a9dc76"
-          "11=#ffd866"
-          "12=#fc9867"
-          "13=#ab9df2"
-          "14=#78dce8"
-          "15=#fcfcfa"
-        ];
-        selection-background = "5b595c";
-        selection-foreground = "fcfcfa";
-      };
     };
   };
 
@@ -942,17 +943,24 @@ in {
         "break"
         {
           type = "custom";
-          format = "\u001b[90m┌──────────────────────Hardware──────────────────────┐";
+          format = "┌───────────────────────Hardware──────────────────────┐";
+          color = "90";
         }
         {
-          type = "host";
-          key = " PC";
+          type = "chassis";
+          key = " PC";
+          keyColor = "green";
+        }
+        {
+          type = "board";
+          key = "│ ├";
           keyColor = "green";
         }
         {
           type = "cpu";
           key = "│ ├";
           showPeCoreCount = true;
+          format = "{1}";
           keyColor = "green";
         }
         {
@@ -973,31 +981,34 @@ in {
         }
         {
           type = "memory";
-          key = "│ ├";
-          keyColor = "green";
-        }
-        {
-          type = "swap";
-          key = "└ └󰓡 ";
+          key = "└ └";
           keyColor = "green";
         }
         {
           type = "custom";
-          format = "\u001b[90m└────────────────────────────────────────────────────┘";
+          format = "└────────────────────────────────────────────────────┘";
+          color = "90";
         }
         "break"
         {
           type = "custom";
-          format = "\u001b[90m┌──────────────────────Software──────────────────────┐";
+          format = "┌──────────────────────Software──────────────────────┐";
+          color = "90";
         }
         {
           type = "os";
-          key = " OS";
+          key = " OS";
           keyColor = "yellow";
         }
         {
           type = "kernel";
           key = "│ ├";
+          keyColor = "yellow";
+        }
+        {
+          type = "gpu";
+          key = "│ ├󰍛 GPU Driver";
+          format = "{3}";
           keyColor = "yellow";
         }
         {
@@ -1007,22 +1018,27 @@ in {
         }
         {
           type = "shell";
-          key = "└ └";
+          key = "│ ├";
+          keyColor = "yellow";
+        }
+        {
+          type = "editor";
+          key = "└ └";
           keyColor = "yellow";
         }
         "break"
         {
-          type = "de";
-          key = " DE";
+          type = "wm";
+          key = " WM";
           keyColor = "blue";
         }
         {
-          type = "wm";
+          type = "lm";
           key = "│ ├";
           keyColor = "blue";
         }
         {
-          type = "wmtheme";
+          type = "theme";
           key = "│ ├󰉼";
           keyColor = "blue";
         }
@@ -1048,12 +1064,14 @@ in {
         }
         {
           type = "custom";
-          format = "\u001b[90m└────────────────────────────────────────────────────┘";
+          format = "└────────────────────────────────────────────────────┘";
+          color = "90";
         }
         "break"
         {
           type = "custom";
-          format = "\u001b[90m┌────────────────────Uptime / Age────────────────────┐";
+          format = "┌────────────────────Uptime / Age────────────────────┐";
+          color = "90";
         }
         {
           type = "command";
@@ -1068,7 +1086,8 @@ in {
         }
         {
           type = "custom";
-          format = "\u001b[90m└────────────────────────────────────────────────────┘";
+          format = "└────────────────────────────────────────────────────┘";
+          color = "90";
         }
         "break"
       ];
