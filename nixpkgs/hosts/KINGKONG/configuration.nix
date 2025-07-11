@@ -53,7 +53,11 @@
     useUserPackages = true;
   };
 
-  nixpkgs.config.allowUnfree = true;
+  nixpkgs.config = {
+    allowUnfree = true;
+    cudaSupport = true;
+    rocmSupport = true;
+  };
   networking.hostName = "KINGKONG"; # Define your hostname.
 
   networking.networkmanager.enable = true; # Easiest to use and most distros use this by default.

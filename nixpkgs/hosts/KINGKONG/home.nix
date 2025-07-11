@@ -807,7 +807,7 @@ in {
       graph_symbol_mem = "default";
       graph_symbol_net = "default";
       graph_symbol_proc = "default";
-      shown_boxes = "cpu mem net proc";
+      shown_boxes = "cpu gpu0 mem net proc";
       update_ms = 2000;
       proc_sorting = "cpu lazy";
       proc_reversed = false;
@@ -857,26 +857,18 @@ in {
       io_mode = false;
       io_graph_combined = false;
       io_graph_speeds = "";
-
-      #* Set fixed values for network graphs in Mebibits. Is only used if net_auto is also set to False.
-      net_download = 100;
-      net_upload = 100;
-
-      #* Use network graphs auto rescaling mode, ignores any values set above and rescales down to 10 Kibibytes at the lowest.
-      net_auto = true;
-
-      #* Sync the auto scaling for download and upload to whichever currently has the highest scale.
-      net_sync = true;
-
-      #* Starts with the Network Interface specified here.
+      net_download = 600;
+      net_upload = 400;
+      net_auto = false;
+      net_sync = false;
       net_iface = "";
       show_battery = true;
       selected_battery = "Auto";
       log_level = "WARNING";
       nvml_measure_pcie_speeds = true;
       gpu_mirror_graph = true;
-      custom_gpu_name0 = "";
-      custom_gpu_name1 = "";
+      custom_gpu_name0 = "NVIDIA Discrete";
+      custom_gpu_name1 = "AMD Integrated";
       custom_gpu_name2 = "";
       custom_gpu_name3 = "";
       custom_gpu_name4 = "";
