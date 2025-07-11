@@ -2,6 +2,7 @@
   config,
   pkgs,
   lib,
+  osConfig,
   ...
 }: let
   customOhMyZshTheme = ''
@@ -761,10 +762,16 @@ in {
       vram = true;
       ram = true;
       frame_timing = 0;
-    };
-    settingsPerApplication.Civ7_linux_Vulkan_FinalRelease = {
       fps_limit = 60;
     };
+    # settingsPerApplication = {
+    #   Civ7_linux_Vulkan_FinalRelease = {
+    #     fps_limit = 60;
+    #   };
+    #   Civ7_Win64_DX12 = {
+    #     fps_limit = 60;
+    #   };
+    # };
   };
 
   programs.git = {
@@ -789,6 +796,12 @@ in {
 
   programs.firefox = {
     enable = true;
+  };
+
+  programs.lutris = {
+    enable = true;
+    steamPackage = osConfig.programs.steam.package;
+    protonPackages = [pkgs.proton-ge-bin];
   };
 
   programs.btop = {

@@ -9,7 +9,6 @@
 }: {
   imports = [
     # Include the results of the hardware scan.
-    # This is not included in git
     ./hardware-configuration.nix
     # Include nvidia specific settings.
     ./nvidia-hardware-configuration.nix
@@ -17,8 +16,11 @@
     ./hardware.nix
     # Main user creation
     ./main-user.nix
+    # Home manager stuff
     inputs.home-manager.nixosModules.default
+    # AMD CPU specific optimizations
     ./amd-cpu.nix
+    # Neovim configuration
     ./nvf.nix
   ];
 
