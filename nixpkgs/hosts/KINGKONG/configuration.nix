@@ -55,7 +55,6 @@
 
   networking.hostName = "KINGKONG"; # Define your hostname.
 
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
   networking.networkmanager.enable = true; # Easiest to use and most distros use this by default.
 
   # Set your time zone.
@@ -168,6 +167,9 @@
   };
 
   networking.interfaces.eno1.wakeOnLan.enable = true;
+
+  # Manage removable media like USB storage
+  services.udisks2.enable = true;
 
   # This option defines the first version of NixOS you have installed on this particular machine,
   # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.

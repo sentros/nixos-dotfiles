@@ -714,7 +714,7 @@ in {
     clock24 = true;
     keyMode = "vi";
     mouse = true;
-    shortcut = "a";
+    shortcut = "b";
     terminal = "tmux-256color";
     extraConfig = ''
       set-option -g status-position top
@@ -1091,6 +1091,14 @@ in {
         }
         "break"
       ];
+    };
+  };
+  services.udiskie = {
+    enable = true;
+    settings = {
+      program_options = {
+        file_manager = "${pkgs.nautilus}/bin/nautilus";
+      };
     };
   };
 }
