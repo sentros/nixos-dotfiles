@@ -2,9 +2,8 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 {
-  config,
-  lib,
   pkgs,
+  pkgs-unstable,
   inputs,
   ...
 }: {
@@ -52,7 +51,6 @@
   };
 
   nixpkgs.config.allowUnfree = true;
-
   networking.hostName = "KINGKONG"; # Define your hostname.
 
   networking.networkmanager.enable = true; # Easiest to use and most distros use this by default.
@@ -101,9 +99,13 @@
     alsa.support32Bit = true;
   };
 
-  programs._1password.enable = true;
+  programs._1password = {
+    enable = true;
+    package = pkgs-unstable._1password-cli;
+  };
   programs._1password-gui = {
     enable = true;
+    package = pkgs-unstable._1password-gui;
     # Certain features, including CLI integration and system authentication support,
     # require enabling PolKit integration on some desktop environments (e.g. Plasma).
     polkitPolicyOwners = ["john"];
