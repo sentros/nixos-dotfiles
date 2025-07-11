@@ -19,6 +19,7 @@
 
     # Driver version
     # package = config.boot.kernelPackages.nvidiaPackages.production;
+    # https://github.com/NixOS/nixpkgs/blob/nixos-unstable/pkgs/os-specific/linux/nvidia-x11/default.nix#L74
     package = config.boot.kernelPackages.nvidiaPackages.mkDriver {
       version = "570.169";
       sha256_64bit = "sha256-XzKoR3lcxcP5gPeRiausBw2RSB1702AcAsKCndOHN2U=";
