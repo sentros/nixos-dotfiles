@@ -763,6 +763,8 @@ in {
       ram = true;
       frame_timing = 0;
       fps_limit = 60;
+      # Show only discrete GPU
+      pci_dev = "0000:01:00.0";
     };
     # settingsPerApplication = {
     #   Civ7_linux_Vulkan_FinalRelease = {
