@@ -161,6 +161,12 @@
     enable = true;
     nvidiaSupport = true;
   };
+  programs.nh = {
+    enable = true;
+    clean.enable = true;
+    clean.extraArgs = "--keep-since 4d --keep 3";
+    flake = "/etc/nixos";
+  };
 
   # Add kwallet for credential storage. F.ex. vscode needs it to store github creds
   security = {

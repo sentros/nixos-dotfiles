@@ -83,7 +83,7 @@ in {
         # https://wiki.hyprland.org/Configuring/Variables/#general
         general {
             gaps_in = 5
-            gaps_out = 20
+            gaps_out = 10
 
             border_size = 2
 
@@ -397,7 +397,7 @@ in {
     };
   };
 
-  # Configure lock screen and behaviour in hyprland
+  # Configure lock screen and behaviour in h;;yprland
   programs.hyprlock = {
     enable = true;
     settings = {
@@ -452,10 +452,15 @@ in {
       layer = "top";
       position = "top";
       spacing = 0;
-      height = 26;
+      mode = "dock";
+      gtk-layer-shell = true;
 
       modules-left = [
+        "custom/left"
         "hyprland/workspaces"
+        "custom/right"
+        "custom/paddw"
+        "hyprland/window"
       ];
 
       modules-center = [
@@ -469,26 +474,16 @@ in {
         "cpu"
         "memory"
         "temperature"
-        "network"
         "custom/power-menu"
       ];
-
+      "custom/left" = {
+        format = "";
+        tooltip = false;
+      };
       "hyprland/workspaces" = {
         on-click = "activate";
-        format = "{icon}";
-        format-icons = {
-          default = "";
-          "1" = 1;
-          "2" = 2;
-          "3" = 3;
-          "4" = 4;
-          "5" = 5;
-          "6" = 6;
-          "7" = 7;
-          "8" = 8;
-          "9" = 9;
-          active = "󱓻";
-        };
+        on-scroll-up = "hyprctl dispatch workspace -1";
+        on-scroll-down = "hyprctl dispatch workspace +1";
         persistent-workspaces = {
           "1" = "[]";
           "2" = "[]";
@@ -497,11 +492,39 @@ in {
           "5" = "[]";
         };
       };
+      "custom/right" = {
+        format = "";
+        tooltip = false;
+      };
+      "custom/paddw" = {
+        format = " ";
+        tooltip = false;
+      };
+
+      "hyprland/window" = {
+        swap-icon-label = false;
+        format = "{}";
+        tooltip = false;
+        min-length = 5;
+        rewrite = {
+          "" = "<span foreground='#89b4fa'> </span> Hyprland";
+          "~" = "  Terminal";
+          zsh = "  Terminal";
+          "tmux(.*)" = "<span foreground='#a6e3a1'> </span> Tmux";
+          "(.*)Mozilla Firefox" = "<span foreground='#f38ba8'>󰈹 </span> Firefox";
+          "(.*) — Mozilla Firefox" = "<span foreground='#f38ba8'>󰈹 </span> $1";
+          nvim = "<span foreground='#a6e3a1'> </span> Neovim";
+          "nvim (.*)" = "<span foreground='#a6e3a1'> </span> $1";
+        };
+      };
 
       clock = {
         timezone = "Europe/Helsinki";
         tooltip-format = "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
+        format = "{:%H:%M}";
         format-alt = "{:%Y-%m-%d}";
+        min-length = 6;
+        max-lenght = 6;
       };
 
       network = {
@@ -518,13 +541,25 @@ in {
       };
 
       cpu = {
-        format = "{usage}% ";
+        format = "󰍛 {usage}%";
         tooltip = false;
+        interval = 5;
+        min-length = 6;
+        max-length = 6;
         on-click = "ghostty -e btop";
       };
 
       memory = {
-        format = "{}% ";
+        states = {
+          warning = 75;
+          critical = 90;
+        };
+        format = "󰘚 {percentage}%";
+        format-critical = "󰀦 {percentage}%";
+        tooltip = false;
+        interval = 5;
+        min-length = 7;
+        max-length = 7;
       };
 
       temperature = {
@@ -549,11 +584,11 @@ in {
         user = true;
       };
       wireplumber = {
-        format = "";
-        format-muted = "󰝟";
+        format = "󰋋 {volume}%";
+        format-muted = "󰝟 {volume}%";
         scroll-step = 5;
         on-click = "helvum";
-        tooltip-format = "Playinf at {volume}%";
+        tooltip-format = "Playing at {volume}%";
         on-click-right = "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle";
       };
       "custom/power-menu" = {
@@ -588,48 +623,159 @@ in {
           show_power_menu
         '';
       };
-      style = ''
-        * {
-          color = #cdd6f4;
-          background-color: #181824;
-          border: none;
-          border-radius: 0;
-          font-family: CaskaydiaMono Nerd Font;
-          font-size: 12px;
-        }
-
-
-        #workspaces {
-          margin-left: 7px;
-        }
-
-        #workspaces button {
-          all: initial;
-          padding: 2px 6px;
-          margin-right: 3px;
-        }
-
-        #custom-dropbox,
-        #cpu,
-        #power-profiles-daemon,
-        #battery,
-        #network,
-        #bluetooth,
-        #pulseaudio,
-        #clock {
-          min-width: 12px;
-          margin-right: 13px;
-        }
-
-        tooltip {
-          padding: 2px;
-        }
-
-        tooltip label {
-          padding: 2px;
-        }
-      '';
     };
+    style = ''
+      * {
+          min-height: 0;
+          border: none;
+          margin: 0;
+          padding: 0;
+      }
+      window#waybar {
+        background: shade(#11111b, 0.5);
+      }
+      window#waybar > box {
+        background: #11111b;
+        margin: 2px;
+      }
+      tooltip {
+        background: #11111b;
+        border: 1.5px solid #cdd6f4;
+        border-radius: 8px;
+      }
+
+      tooltip label {
+        color: #cdd6f4;
+        margin: -1.5px 3px;
+      }
+
+      #workspaces
+      #window
+      #clock
+      #systemd-failed-units,
+      #bluetooth,
+      #network,
+      #wireplumber,
+      #cpu,
+      #memory,
+      #temperature,
+      #custom-power-menu {
+        opacity: 1;
+        color: #cdd6f4;
+        padding: 0 10px;
+      }
+      #custom-left {
+        margin-bottom: 0;
+        text-shadow: -2px 0 2px rgba(0, 0, 0, 0.5);
+        color: #181825;
+        background: #11111b;
+        padding-left: 2px;
+      }
+      #workspaces {
+        background: #181825;
+      }
+      workspaces button {
+        color: #cdd6f4;
+        border-radius: 8px;
+        box-shadow: none;
+        margin: 2px 0;
+        padding: 0 2px;
+        transition: none;
+      }
+      #workspaces button:hover {
+        color: alpha(#cdd6f4, 0.75);
+        background: #313244;
+        text-shadow: none;
+      }
+      #workspaces button.active {
+        color: #11111b;
+        background: #9399b2;
+        text-shadow: 0 0 2px rgba(0, 0, 0, 0.6);
+        box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.4);
+        margin: 2px;
+        padding: 0 6px;
+      }
+      #custom-right {
+        color: #181825;
+        background: #11111b;
+        margin-bottom: 0;
+        padding-right: 3px;
+        text-shadow: 2px 0 2px rgba(0, 0, 0, 0.5);
+      }
+      #clock {
+        background: #313244;
+        margin-left: -2px;
+        padding: 0 3px 0 0;
+      }
+      #bluetooth {
+        background: #181825;
+        padding-right: 5px;
+      }
+
+      #bluetooth:hover {
+        color: alpha(#cdd6f4, 0.75);
+      }
+      #network {
+        background: #181825;
+        padding: 0 8px 0 5px;
+      }
+
+      #network:hover {
+        color: alpha(#cdd6f4, 0.75);
+      }
+      #wireplumber {
+        background: #181825;
+      }
+
+      #wireplumber:hover {
+        color: alpha(#cdd6f4, 0.75);
+      }
+      #cpu {
+        background: #313244;
+      }
+      #memory {
+        background: #1e1e2e;
+        padding: 0 0 0 1px;
+      }
+
+      #memory.warning {
+        color: #f9e2af;
+      }
+
+      #memory.critical {
+        color: #f38ba8;
+      }
+      #temperature {
+        background: #181825;
+        padding: 0 0 0 10px;
+      }
+      #custom-power-menu {
+        color: #11111b;
+        background: #9399b2;
+        text-shadow: 0 0 2px rgba(0, 0, 0, 0.6);
+        box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.6);
+        border-radius: 10px;
+        margin: 2px 4px 2px 0;
+        padding: 0 6px 0 9px;
+      }
+
+      #custom-power-menu:hover {
+        color: alpha(#cdd6f4, 0.75);
+        background: #313244;
+        text-shadow: none;
+        box-shadow: none;
+      }
+      * {
+        font-family: "JetBrainsMono Nerd Font";
+        font-size: 16px;
+        font-weight: bold;
+      }
+
+      tooltip label,
+      #window label {
+        font-weight: normal;
+      }
+    '';
   };
 
   services.hyprpaper = {
@@ -684,7 +830,8 @@ in {
     autosuggestion.enable = true;
     enableCompletion = true;
     shellAliases = {
-      nrs = "sudo nixos-rebuild switch --flake /etc/nixos/hosts/#KINGKONG";
+      nrs = "nh os switch -a -u /etc/nixos";
+      #nrs = "sudo nixos-rebuild switch --flake /etc/nixos/hosts/#KINGKONG";
       gc = "sudo nix-collect-garbage";
       ls = "eza";
       cat = "bat";
@@ -1102,6 +1249,7 @@ in {
   };
   services.udiskie = {
     enable = true;
+    automount = false;
     settings = {
       program_options = {
         file_manager = "${pkgs.nautilus}/bin/nautilus";
