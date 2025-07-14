@@ -64,6 +64,17 @@ in {
     };
   };
 
+  home.pointerCursor = {
+    name = "Bibata-Modern-Classic";
+    package = pkgs.bibata-cursors;
+    gtk.enable = true;
+    size = 24;
+    hyprcursor = {
+      enable = true;
+      size = 24;
+    };
+  };
+
   wayland.windowManager.hyprland = {
     enable = true;
     extraConfig = builtins.readFile ./hyprland.conf;
