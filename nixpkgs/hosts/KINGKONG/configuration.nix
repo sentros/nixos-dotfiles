@@ -82,8 +82,12 @@
 
   # Use sddm for graphical login
   services.displayManager = {
-    sddm.enable = true;
-    sddm.wayland.enable = true;
+    sddm = {
+      enable = true;
+      wayland.enable = true;
+      enableHidpi = true;
+      theme = "sugar-dark";
+    };
     defaultSession = "hyprland-uwsm";
   };
 
@@ -141,6 +145,8 @@
     helvum
     diff-so-fancy
     wayland-utils
+    sddm-sugar-dark
+    libsForQt5.qt5.qtgraphicaleffects
   ];
 
   fonts.packages = with pkgs; [
