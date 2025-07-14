@@ -1,8 +1,4 @@
-{
-  config,
-  lib,
-  ...
-}: {
+{pkgs-unstable, ...}: {
   programs.nvf = {
     enable = true;
     settings = {
@@ -28,14 +24,15 @@
         languages = {
           enableTreesitter = true;
           enableFormat = true;
+          css = {
+            enable = true;
+            format.package = pkgs-unstable.prettier;
+          };
           nix.enable = true;
-          #	ts.enable = true;
-          #	yaml.enable = true;
-          #	hcl.enable = true;
-          #	bash.enable = true;
-          #	markdown.enable = true;
-          #	python.enable = true;
         };
+        treesitter.grammars = with pkgs-unstable; [
+          vimPlugins.nvim-treesitter.builtGrammars.hyprlang
+        ];
         globals.mapleader = " ";
         keymaps = [
           {
