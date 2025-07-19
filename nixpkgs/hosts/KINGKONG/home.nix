@@ -54,6 +54,7 @@ in {
     tree
     nixfmt-rfc-style
     libreoffice
+    thunderbird
   ];
 
   gtk = {
