@@ -3,7 +3,7 @@
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 {
   pkgs,
-  pkgs-unstable,
+  # pkgs-unstable,
   inputs,
   ...
 }: {
@@ -42,7 +42,7 @@
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.john = {
     isNormalUser = true;
-    extraGroups = ["wheel"]; # Enable ‘sudo’ for the user.
+    extraGroups = ["wheel" "audio"]; # Enable ‘sudo’ for the user.
   };
 
   home-manager = {
@@ -103,22 +103,24 @@
   services.printing.enable = true;
 
   # Enable sound.
-  # services.pulseaudio.enable = true;
-  # OR
-  services.pipewire = {
+  services.pulseaudio = {
     enable = true;
-    pulse.enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
+    support32Bit = true;
+  };
+  services.pipewire = {
+    enable = false;
+    pulse.enable = false;
+    alsa.enable = false;
+    alsa.support32Bit = false;
   };
 
   programs._1password = {
     enable = true;
-    package = pkgs-unstable._1password-cli;
+    # package = pkgs-unstable._1password-cli;
   };
   programs._1password-gui = {
     enable = true;
-    package = pkgs-unstable._1password-gui;
+    # package = pkgs-unstable._1password-gui;
     # Certain features, including CLI integration and system authentication support,
     # require enabling PolKit integration on some desktop environments (e.g. Plasma).
     polkitPolicyOwners = ["john"];
@@ -142,7 +144,6 @@
     acpica-tools
     stress-ng
     blueberry
-    helvum
     diff-so-fancy
     wayland-utils
     sddm-sugar-dark

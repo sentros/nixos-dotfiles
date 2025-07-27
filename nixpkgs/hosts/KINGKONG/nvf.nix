@@ -1,4 +1,8 @@
-{pkgs-unstable, ...}: {
+{
+  pkgs,
+  # pkgs-unstable,
+  ...
+}: {
   programs.nvf = {
     enable = true;
     settings = {
@@ -26,11 +30,14 @@
           enableFormat = true;
           css = {
             enable = true;
-            format.package = pkgs-unstable.prettier;
+            # format.package = pkgs-unstable.prettier;
           };
           nix.enable = true;
         };
-        treesitter.grammars = with pkgs-unstable; [
+        # treesitter.grammars = with pkgs-unstable; [
+        #   vimPlugins.nvim-treesitter.builtGrammars.hyprlang
+        # ];
+        treesitter.grammars = with pkgs; [
           vimPlugins.nvim-treesitter.builtGrammars.hyprlang
         ];
         globals.mapleader = " ";

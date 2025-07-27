@@ -43,9 +43,9 @@ in {
   home.file.".oh-my-zsh/custom/themes/sentros.zsh-theme".text = customOhMyZshTheme;
 
   # set path file to custom folder
-  home.file.".zshrc".text = ''
-    ${prependedZshCustom}
-  '';
+  # home.file.".zshrc".text = ''
+  #   ${prependedZshCustom}
+  # '';
 
   home.packages = with pkgs; [
     bat
@@ -55,6 +55,8 @@ in {
     nixfmt-rfc-style
     libreoffice
     thunderbird
+    pavucontrol
+    pamixer
   ];
 
   gtk = {
@@ -277,7 +279,7 @@ in {
         "systemd-failed-units"
         "bluetooth"
         "network"
-        "wireplumber"
+        "pulseaudio"
         "cpu"
         "memory"
         "temperature"
@@ -390,13 +392,13 @@ in {
         system = true;
         user = true;
       };
-      wireplumber = {
+      pulseaudio = {
         format = "󰋋 {volume}%";
         format-muted = "󰝟 {volume}%";
         scroll-step = 5;
-        on-click = "helvum";
+        on-click = "pavucontrol";
         tooltip-format = "Playing at {volume}%";
-        on-click-right = "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle";
+        on-click-right = "pamixer -t";
       };
       "custom/power-menu" = {
         format = "󰐥";
@@ -462,7 +464,7 @@ in {
       #systemd-failed-units,
       #bluetooth,
       #network,
-      #wireplumber,
+      #pulseaudio,
       #cpu,
       #memory,
       #temperature,
@@ -530,11 +532,11 @@ in {
       #network:hover {
         color: alpha(#cdd6f4, 0.75);
       }
-      #wireplumber {
+      #pulseaudio {
         background: #181825;
       }
 
-      #wireplumber:hover {
+      #pulseaudio:hover {
         color: alpha(#cdd6f4, 0.75);
       }
       #cpu {
