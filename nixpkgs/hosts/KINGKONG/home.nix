@@ -67,16 +67,32 @@ in {
     };
   };
 
-  home.pointerCursor = {
-    name = "Bibata-Modern-Classic";
-    package = pkgs.bibata-cursors;
-    gtk.enable = true;
-    size = 24;
-    hyprcursor = {
-      enable = true;
-      size = 24;
-    };
+  # https://nix.catppuccin.com/options/main/home/catppuccin/
+  catppuccin = {
+    # This would enable all possible catppuccin themes
+    # enable = true;
+    flavor = "mocha";
+    bat.enable = true;
+    btop.enable = true;
+    cursors.enable = true;
+    firefox.enable = true;
+    fzf.enable = true;
+    ghostty.enable = true;
+    # GTK disabled upstream
+    # gtk.enable = true;
+    zsh-syntax-highlighting.enable = true;
   };
+
+  # home.pointerCursor = {
+  #   name = "Bibata-Modern-Classic";
+  #   package = pkgs.bibata-cursors;
+  #   gtk.enable = true;
+  #   size = 24;
+  #   hyprcursor = {
+  #     enable = true;
+  #     size = 24;
+  #   };
+  # };
 
   wayland.windowManager.hyprland = {
     enable = true;
@@ -646,7 +662,6 @@ in {
       cat = "bat";
     };
     history = {
-      path = "$HOME/.zsh_history";
       save = 10000;
       size = 10000;
       share = true;
@@ -765,131 +780,13 @@ in {
   programs.btop = {
     enable = true;
     settings = {
-      color_theme = "catpuccin";
-      theme_background = true;
-      truecolor = true;
-      force_tty = false;
-      presets = "cpu:1:default,proc:0:default cpu:0:default,mem:0:default,net:0:default cpu:0:block,net:0:tty";
-      vim_keys = false;
-      rounded_corners = true;
-      graph_symbol = "braille";
-      graph_symbol_cpu = "default";
-      graph_symbol_gpu = "default";
-      graph_symbol_mem = "default";
-      graph_symbol_net = "default";
-      graph_symbol_proc = "default";
       shown_boxes = "cpu gpu0 mem net proc";
-      update_ms = 2000;
-      proc_sorting = "cpu lazy";
-      proc_reversed = false;
-      proc_tree = false;
-      proc_colors = true;
-      proc_gradient = true;
-      proc_per_core = false;
-      proc_mem_bytes = true;
-      proc_cpu_graphs = true;
-      proc_info_smaps = false;
-      proc_left = false;
-      proc_filter_kernel = false;
-      proc_aggregate = false;
-      cpu_graph_upper = "Auto";
-      cpu_graph_lower = "Auto";
-      show_gpu_info = "Auto";
-      cpu_invert_lower = true;
-      cpu_single_graph = false;
-      cpu_bottom = false;
-      show_uptime = true;
-      check_temp = true;
       cpu_sensor = "nct6799/TSI0_TEMP";
-      show_coretemp = true;
-      #* Set a custom mapping between core and coretemp, can be needed on certain cpus to get correct temperature for correct core.
-      #* Use lm-sensors or similar to see which cores are reporting temperatures on your machine.
-      #* Format "x:y" x=core with wrong temp, y=core with correct temp, use space as separator between multiple entries.
-      #* Example: "4:0 5:1 6:3"
       cpu_core_map = "";
       temp_scale = "celsius";
-      base_10_sizes = false;
-      show_cpu_freq = true;
-      clock_format = "%X";
-      background_update = true;
-      custom_cpu_name = "";
-      disks_filter = "";
-      mem_graphs = true;
-      mem_below_net = false;
-      zfs_arc_cached = true;
-      show_swap = true;
-      swap_disk = true;
-      show_disks = true;
-      only_physical = true;
-      use_fstab = true;
-      zfs_hide_datasets = false;
-      disk_free_priv = false;
-      show_io_stat = true;
-      io_mode = false;
-      io_graph_combined = false;
-      io_graph_speeds = "";
       net_download = 600;
       net_upload = 400;
-      net_auto = false;
-      net_sync = false;
-      net_iface = "";
-      show_battery = true;
-      selected_battery = "Auto";
-      log_level = "WARNING";
-      nvml_measure_pcie_speeds = true;
-      gpu_mirror_graph = true;
-      custom_gpu_name0 = "NVIDIA Discrete";
       custom_gpu_name1 = "AMD Integrated";
-      custom_gpu_name2 = "";
-      custom_gpu_name3 = "";
-      custom_gpu_name4 = "";
-      custom_gpu_name5 = "";
-    };
-    themes = {
-      catppuccin = ''
-        theme[main_bg]="#24273a"
-        theme[main_fg]="#c6d0f5"
-        theme[title]="#c6d0f5"
-        theme[hi_fg]="#8caaee"
-        theme[selected_bg]="#51576d"
-        theme[selected_fg]="#8caaee"
-        theme[inactive_fg]="#838ba7"
-        theme[graph_text]="#f2d5cf"
-        theme[meter_bg]="#51576d"
-        theme[proc_misc]="#f2d5cf"
-        theme[cpu_box]="#ca9ee6" #Mauve
-        theme[mem_box]="#a6d189" #Green
-        theme[net_box]="#ea999c" #Maroon
-        theme[proc_box]="#8caaee" #Blue
-        theme[div_line]="#737994"
-        theme[temp_start]="#a6d189"
-        theme[temp_mid]="#e5c890"
-        theme[temp_end]="#e78284"
-        theme[cpu_start]="#81c8be"
-        theme[cpu_mid]="#85c1dc"
-        theme[cpu_end]="#babbf1"
-        theme[free_start]="#ca9ee6"
-        theme[free_mid]="#babbf1"
-        theme[free_end]="#8caaee"
-        theme[cached_start]="#85c1dc"
-        theme[cached_mid]="#8caaee"
-        theme[cached_end]="#babbf1"
-        theme[available_start]="#ef9f76"
-        theme[available_mid]="#ea999c"
-        theme[available_end]="#e78284"
-        theme[used_start]="#a6d189"
-        theme[used_mid]="#81c8be"
-        theme[used_end]="#99d1db"
-        theme[download_start]="#ef9f76"
-        theme[download_mid]="#ea999c"
-        theme[download_end]="#e78284"
-        theme[upload_start]="#a6d189"
-        theme[upload_mid]="#81c8be"
-        theme[upload_end]="#99d1db"
-        theme[process_start]="#85c1dc"
-        theme[process_mid]="#babbf1"
-        theme[process_end]="#ca9ee6"
-      '';
     };
   };
   programs.fastfetch = {

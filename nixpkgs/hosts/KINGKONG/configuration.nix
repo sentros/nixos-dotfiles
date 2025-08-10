@@ -18,8 +18,6 @@
     ./main-user.nix
     # Home manager stuff
     inputs.home-manager.nixosModules.default
-    # AMD CPU specific optimizations
-    ./amd-cpu.nix
     # Neovim configuration
     ./nvf.nix
   ];
@@ -32,13 +30,38 @@
   main-user.enable = true;
   main-user.userName = "john";
 
-  # Use latest kernel
-  boot.kernelPackages = pkgs.linuxPackages_latest;
-
+  # Current ZFS support is up to 6.15 kernel
+  boot.kernelPackages = pkgs.linuxKernel.packages.linux_6_15;
   # Use the systemd-boot EFI boot loader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader = {
+    grub = {
+      enable = true;
+      zfsSupport = true;
+      efiSupport = true;
+      efiInstallAsRemovable = true;
+      mirroredBoots = [
+        {
+          devices = ["nodev"];
+          path = "/boot";
+        }
+      ];
+    };
+  };
+  services.zfs = {
+    autoScrub.enable = true;
+    autoSnapshot.enable = true;
+    trim.enable = true;
+  };
+  boot.kernelModules = ["nct6775"];
+  boot.kernelParams = ["nohibernate" "amd_pstate=active"];
 
+  # https://nix.catppuccin.com/options/main/nixos/catppuccin/
+  catppuccin = {
+    flavor = "mocha";
+    grub.enable = true;
+    sddm.enable = true;
+    tty.enable = true;
+  };
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.john = {
     isNormalUser = true;
@@ -49,7 +72,12 @@
     extraSpecialArgs = {inherit inputs;};
     backupFileExtension = "hm-backup";
     users = {
-      "john" = import ./home.nix;
+      "john" = {
+        imports = [
+          ./home.nix
+          inputs.catppuccin.homeModules.catppuccin
+        ];
+      };
     };
     useGlobalPkgs = true;
     useUserPackages = true;
@@ -61,7 +89,7 @@
     rocmSupport = true;
   };
   networking.hostName = "KINGKONG"; # Define your hostname.
-
+  networking.hostId = "773c1290";
   networking.networkmanager.enable = true; # Easiest to use and most distros use this by default.
 
   # Set your time zone.
@@ -84,9 +112,9 @@
   services.displayManager = {
     sddm = {
       enable = true;
+      # current default is qt5 but catppuccin requires qt6
+      package = pkgs.kdePackages.sddm;
       wayland.enable = true;
-      enableHidpi = true;
-      theme = "sugar-dark";
     };
     defaultSession = "hyprland-uwsm";
   };
@@ -146,8 +174,7 @@
     blueberry
     diff-so-fancy
     wayland-utils
-    sddm-sugar-dark
-    libsForQt5.qt5.qtgraphicaleffects
+    # libsForQt5.qt5.qtgraphicaleffects
   ];
 
   fonts.packages = with pkgs; [

@@ -9,6 +9,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nvf.url = "github:notashelf/nvf";
+    catppuccin.url = "github:catppuccin/nix";
   };
 
   outputs = inputs @ {
@@ -16,6 +17,7 @@
     nixpkgs,
     # nixpkgs-unstable,
     nvf,
+    catppuccin,
     ...
   }: {
     nixosConfigurations.KINGKONG = nixpkgs.lib.nixosSystem rec {
@@ -31,6 +33,7 @@
         ./hosts/KINGKONG/configuration.nix
         inputs.home-manager.nixosModules.default
         inputs.nvf.nixosModules.default
+        inputs.catppuccin.nixosModules.catppuccin
       ];
     };
   };
