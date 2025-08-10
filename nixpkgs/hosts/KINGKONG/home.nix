@@ -31,9 +31,6 @@
     autoload -U add-zsh-hook
     add-zsh-hook precmd  theme_precmd
   '';
-  prependedZshCustom = ''
-    export ZSH_CUSTOM="${config.home.homeDirectory}/.oh-my-zsh/custom"
-  '';
 in {
   home.username = "john";
   home.homeDirectory = "/home/john";
@@ -41,11 +38,6 @@ in {
 
   # write oh-my-zsh theme file
   home.file.".oh-my-zsh/custom/themes/sentros.zsh-theme".text = customOhMyZshTheme;
-
-  # set path file to custom folder
-  # home.file.".zshrc".text = ''
-  #   ${prependedZshCustom}
-  # '';
 
   home.packages = with pkgs; [
     bat
@@ -654,6 +646,9 @@ in {
     enable = true;
     autosuggestion.enable = true;
     enableCompletion = true;
+    localVariables = {
+      ZSH_CUSTOM = "${config.home.homeDirectory}/.oh-my-zsh/custom";
+    };
     shellAliases = {
       nrs = "nh os switch -a -u /etc/nixos";
       #nrs = "sudo nixos-rebuild switch --flake /etc/nixos/hosts/#KINGKONG";
