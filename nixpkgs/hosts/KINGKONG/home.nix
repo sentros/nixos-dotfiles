@@ -70,9 +70,7 @@ in {
     firefox.enable = true;
     fzf.enable = true;
     ghostty.enable = true;
-    # GTK disabled upstream
-    # gtk.enable = true;
-    # mangohud.enable = true;
+    thunderbird.enable = true;
     zsh-syntax-highlighting.enable = true;
   };
 
@@ -89,7 +87,7 @@ in {
 
   wayland.windowManager.hyprland = {
     enable = true;
-    extraConfig = builtins.readFile ./hyprland.conf;
+    extraConfig = builtins.readFile ./hypr/hyprland.conf;
   };
 
   # Allow unlocking 1password etc with system authentication
@@ -225,7 +223,7 @@ in {
     };
   };
 
-  # Configure lock screen and behaviour in h;;yprland
+  # Configure lock screen and behaviour in hyprland
   programs.hyprlock = {
     enable = true;
     settings = {
@@ -611,8 +609,8 @@ in {
     settings = {
       ipc = "on";
       splash = false;
-      preload = ["/etc/nixos/catppuccin.png"];
-      wallpaper = [",/etc/nixos/catppuccin.png"];
+      preload = ["/etc/nixos/nix.png"];
+      wallpaper = [",/etc/nixos/nix.png"];
     };
   };
 

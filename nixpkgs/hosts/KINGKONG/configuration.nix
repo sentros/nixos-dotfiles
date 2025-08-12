@@ -120,9 +120,6 @@
     defaultSession = "hyprland-uwsm";
   };
 
-  # Tell electron based apps to use wayland
-  environment.sessionVariables.NIXOS_OZONE_WL = "1";
-
   powerManagement.powertop = {
     enable = true;
     postStart = ''
