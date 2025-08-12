@@ -186,7 +186,7 @@
     blueberry
     diff-so-fancy
     wayland-utils
-    # libsForQt5.qt5.qtgraphicaleffects
+    nvtopPackages.full
   ];
 
   fonts.packages = with pkgs; [
