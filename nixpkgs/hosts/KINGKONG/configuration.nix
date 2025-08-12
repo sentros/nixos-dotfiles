@@ -5,6 +5,8 @@
   pkgs,
   # pkgs-unstable,
   inputs,
+  lib,
+  config,
   ...
 }: {
   imports = [
@@ -121,6 +123,20 @@
 
   # Tell electron based apps to use wayland
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
+
+  powerManagement.powertop = {
+    enable = true;
+    postStart = ''
+      ${lib.getExe' config.systemd.package "udevadm"} trigger -c bind -s usb -a idVendor=1532 -a idProduct=00b7
+      ${lib.getExe' config.systemd.package "udevadm"} trigger -c bind -s usb -a idVendor=3207 -a idProduct=5044
+    '';
+  };
+  services.udev.extraRules = ''
+    # disable USB auto suspend for Razer DeathAdder V3 Pro
+    ACTION=="bind", SUBSYSTEM=="usb", ATTR{idVendor}=="1532", ATTR{idProduct}=="00b7", TEST=="power/control", ATTR{power/control}="on"
+    # disable USB auto suspend for Glorious GMMK Pro ISO
+    ACTION=="bind", SUBSYSTEM=="usb", ATTR{idVendor}=="320f", ATTR{idProduct}=="5044", TEST=="power/control", ATTR{power/control}="on"
+  '';
 
   # Enable OpenGL
   hardware.graphics = {
