@@ -92,6 +92,16 @@ in {
     extraConfig = builtins.readFile ./hyprland.conf;
   };
 
+  # Allow unlocking 1password etc with system authentication
+  services.hyprpolkitagent.enable = true;
+
+  # Volume, capslock etc osd
+  services.swayosd.enable = true;
+
+  # write oh-my-zsh theme file
+  # home.file.".config/swayosd/style.css".text = builtins.readFile ./swayosd/style.css;
+  home.file.".config/swayosd".source = ./swayosd;
+
   programs.wofi = {
     enable = true;
     settings = {
@@ -407,7 +417,7 @@ in {
         scroll-step = 5;
         on-click = "pavucontrol";
         tooltip-format = "Playing at {volume}%";
-        on-click-right = "pamixer -t";
+        on-click-right = "swayosd-client --output-volume mute-toggle";
       };
       "custom/power-menu" = {
         format = "󰐥";
@@ -601,8 +611,8 @@ in {
     settings = {
       ipc = "on";
       splash = false;
-      preload = ["/home/john/wallpaper.jpg"];
-      wallpaper = [",/home/john/wallpaper.jpg"];
+      preload = ["/etc/nixos/catppuccin.png"];
+      wallpaper = [",/etc/nixos/catppuccin.png"];
     };
   };
 

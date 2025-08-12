@@ -1,0 +1,27 @@
+/* based on https://github.com/ErikReider/SwayOSD/blob/main/data/style/style.scss */
+window {
+    border-radius: 0;
+    opacity: 0.97;
+    border: 2px solid #c6d0f5;
+
+    background-color: #24273a;
+}
+
+label {
+    font-family: "CaskaydiaMono Nerd Font";
+    font-size: 11pt;
+
+    color: #cad3f5;
+}
+
+image {
+    color: #cad3f5;
+}
+
+progressbar {
+    border-radius: 0;
+}
+
+progress {
+    background-color: #cad3f5;
+}
