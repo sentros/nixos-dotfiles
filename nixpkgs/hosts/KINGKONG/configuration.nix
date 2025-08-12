@@ -12,10 +12,9 @@
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
-    # Include nvidia specific settings.
-    ./nvidia-hardware-configuration.nix
     # Hardware specific stuff
     ./hardware.nix
+    ./nvidia-hardware-configuration.nix
     # Main user creation
     ./main-user.nix
     # Home manager stuff
@@ -55,7 +54,7 @@
     trim.enable = true;
   };
   boot.kernelModules = ["nct6775"];
-  boot.kernelParams = ["nohibernate" "amd_pstate=active"];
+  boot.kernelParams = ["video=HDMI-A-2:3840x2160@119.88"];
 
   # https://nix.catppuccin.com/options/main/nixos/catppuccin/
   catppuccin = {
@@ -128,7 +127,7 @@
     enable = true;
     postStart = ''
       ${lib.getExe' config.systemd.package "udevadm"} trigger -c bind -s usb -a idVendor=1532 -a idProduct=00b7
-      ${lib.getExe' config.systemd.package "udevadm"} trigger -c bind -s usb -a idVendor=3207 -a idProduct=5044
+      ${lib.getExe' config.systemd.package "udevadm"} trigger -c bind -s usb -a idVendor=320f -a idProduct=5044
     '';
   };
   services.udev.extraRules = ''

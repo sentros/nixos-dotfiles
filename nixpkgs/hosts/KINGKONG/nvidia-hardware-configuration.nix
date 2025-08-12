@@ -1,4 +1,4 @@
-{config, ...}: {
+{...}: {
   # nvidia drivers
   hardware.nvidia = {
     # Modesetting is required.

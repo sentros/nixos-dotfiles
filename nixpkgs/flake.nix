@@ -10,6 +10,7 @@
     };
     nvf.url = "github:notashelf/nvf";
     catppuccin.url = "github:catppuccin/nix";
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
   };
 
   outputs = inputs @ {
@@ -18,6 +19,7 @@
     # nixpkgs-unstable,
     nvf,
     catppuccin,
+    nixos-hardware,
     ...
   }: {
     nixosConfigurations.KINGKONG = nixpkgs.lib.nixosSystem rec {
@@ -34,6 +36,9 @@
         inputs.home-manager.nixosModules.default
         inputs.nvf.nixosModules.default
         inputs.catppuccin.nixosModules.catppuccin
+        inputs.nixos-hardware.nixosModules.common-pc-ssd
+        inputs.nixos-hardware.nixosModules.common-hidpi
+        inputs.nixos-hardware.nixosModules.common-cpu-amd-pstate
       ];
     };
   };
