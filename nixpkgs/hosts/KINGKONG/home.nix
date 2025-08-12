@@ -72,6 +72,7 @@ in {
     ghostty.enable = true;
     # GTK disabled upstream
     # gtk.enable = true;
+    # mangohud.enable = true;
     zsh-syntax-highlighting.enable = true;
   };
 
@@ -696,10 +697,12 @@ in {
           set -g status-left-length 100
           set -g status-left ""
           set -g status-right "#{E:@catppuccin_status_application}"
+          set -agF status-right "#{E:@catppuccin_status_cpu}"
           set -ag status-right "#{E:@catppuccin_status_session}"
           set -ag status-right "#{E:@catppuccin_status_uptime}"
         '';
       }
+      tmuxPlugins.cpu
     ];
   };
 
@@ -723,14 +726,59 @@ in {
   programs.mangohud = {
     enable = true;
     settings = {
+      # Based on catppucchin mangohud
+      legacy_layout = false;
+      round_corners = 10;
+      background_alpha = 0.8;
+      background_color = "1E1E2E";
+      table_columns = 3;
+
+      ## Text ##
+      font_size = 24;
+      text_color = "CDD6F4";
+      text_outline_color = 313244;
+
+      ## GPU #
+      gpu_text = "GPU";
+      gpu_stats = true;
       gpu_temp = true;
-      cpu_temp = true;
-      vram = true;
-      ram = true;
-      frame_timing = 0;
-      fps_limit = 60;
+      gpu_color = "A6E3A1";
+      gpu_load_change = "";
+      gpu_load_color = "CDD6F4,FAB387,F38BA8";
       # Show only discrete GPU
       pci_dev = "0000:01:00.0";
+      vram = true;
+
+      ## CPU ##
+      cpu_text = "CPU";
+      cpu_stats = true;
+      cpu_temp = true;
+      cpu_color = "89B4FA";
+      cpu_load_change = true;
+      cpu_load_color = "CDD6F4,FAB387,F38BA8";
+
+      ## RAM ##
+      ram = true;
+      ram_color = "F5C2E7";
+
+      ## ENGINE ##
+      engine_color = "F38BA8";
+
+      ## FPS ##
+      fps = true;
+      fps_color_change = "F38BA8,F9E2AF,A6E3A1";
+      fps_limit = 60;
+      fps_limit_method = "early";
+
+      ## Wine ##
+      wine = true;
+      wine_color = "F38BA8";
+
+      ## Frame timing ##
+      frame_timing = false;
+      frametime_color = "A6E3A1";
+
+      arch = true;
     };
     # settingsPerApplication = {
     #   Civ7_linux_Vulkan_FinalRelease = {
