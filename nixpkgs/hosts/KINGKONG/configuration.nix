@@ -54,7 +54,7 @@
     trim.enable = true;
   };
   boot.kernelModules = ["nct6775"];
-  boot.kernelParams = ["video=HDMI-A-2:3840x2160@119.88"];
+  boot.kernelParams = ["video=3840x2160@119.88"];
 
   # https://nix.catppuccin.com/options/main/nixos/catppuccin/
   catppuccin = {
