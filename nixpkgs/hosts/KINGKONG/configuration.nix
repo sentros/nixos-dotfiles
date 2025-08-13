@@ -119,6 +119,7 @@
     };
     defaultSession = "hyprland-uwsm";
   };
+  services.gnome.gnome-keyring.enable = true;
 
   powerManagement.powertop = {
     enable = true;
@@ -139,6 +140,9 @@
     enable = true;
   };
 
+  services.smartd = {
+    enable = true;
+  };
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
@@ -214,12 +218,8 @@
     flake = "/etc/nixos";
   };
 
-  # Add kwallet for credential storage. F.ex. vscode needs it to store github creds
   security = {
-    pam.services.kwallet = {
-      name = "kwallet";
-      enableKwallet = true;
-    };
+    pam.services.sddm.enableGnomeKeyring = true;
   };
 
   services.openssh = {

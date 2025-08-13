@@ -71,6 +71,7 @@ in {
     fzf.enable = true;
     ghostty.enable = true;
     thunderbird.enable = true;
+    vscode.profiles.Default.enable = true;
     zsh-syntax-highlighting.enable = true;
   };
 
@@ -820,6 +821,8 @@ in {
 
   programs.git = {
     enable = true;
+    userName = "Julius Stenros";
+    userEmail = "julius.stenros@gmail.com";
     extraConfig = {
       gpg = {
         format = "ssh";
@@ -828,12 +831,11 @@ in {
         program = "${lib.getExe' pkgs._1password-gui "op-ssh-sign"}";
       };
       commit = {
-        gpgsign = false;
+        gpgsign = true;
       };
-
-      #     user = {
-      #       signingKey = "...";
-      #     };
+      user = {
+        signingKey = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDoktPpTKsEIYLmIe57fy3BtIRUnqiybSL3Z5pynmOVMR4YpcIdrPGJXX9URAct/Rbz0/3/8YDOjxXP0cWVKVFpijoFj6VxsBSNNugIbGvam14uXJtGK5jByEXKRZvDnsTmg2hwBLOmZpY3vmtWz1IOD3yd1CeskJFYD9dr9LOO3sVty50xXqzy8S76Oe08KlRnNTfHfW9GnhpTuBTGZ+pvDNFA+mxi0+r9BgMbSgMo9BJ5Laq+kbFW37QH4uQ0fKJK+u90jKw4c880Gf4ZLDeTCQeyd46N5h3MzDLt08WgHBTY2e45vPNM0lzJqUc5dSkYreDAVSTwnjxSizasppZ8TKlidwsbFtqogUuC+UumczZcrglW8p7OqdbwFm88UOJ/K6LwqJ/1UefwEhpHz/vyLeRpc3K0drMU1FbbVvwZiWin2Qfs6KCcEx4DhHFYpU1QBC6S24B0ATXP7LTykuvz1eYOYEWl0rwvL7skooY8+AukEHQabFShuRL2Tan+5/M960dSJl3TzlXR9Fbhik4Ugq0iNPsL3mI8FbaOqggYcHRlg94ylKj4e2EgrfW9yNhh5OmrK5frF7qYoE53tVuaoeH/yIgM4WJ5mdoKZHOd43Z1ZiPC+HtiRGJyKtsHuUBhO8MXnj7AVcjZZQEc/utdyEybskcel11zgxA08iAIhQ==";
+      };
     };
     diff-so-fancy.enable = true;
   };
