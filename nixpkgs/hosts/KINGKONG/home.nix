@@ -686,6 +686,7 @@ in {
       gc = "sudo nix-collect-garbage";
       ls = "eza";
       cat = "bat";
+      icat = "kitten icat";
     };
     history = {
       save = 10000;
