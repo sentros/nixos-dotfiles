@@ -39,6 +39,18 @@ in {
   # write oh-my-zsh theme file
   home.file.".oh-my-zsh/custom/themes/sentros.zsh-theme".text = customOhMyZshTheme;
 
+  # zsh-peco-history plugin
+  home.file.".oh-my-zsh/custom/plugins/zsh-peco-history".source = builtins.fetchGit {
+    url = "https://github.com/jimeh/zsh-peco-history";
+    rev = "73615968d46cf172931946b00f89a59da0c124a5";
+  };
+
+  # zsh-peco-history plugin
+  home.file.".oh-my-zsh/custom/plugins/fast-syntax-highlighting".source = builtins.fetchGit {
+    url = "https://github.com/zdharma-continuum/fast-syntax-highlighting.git";
+    rev = "3d574ccf48804b10dca52625df13da5edae7f553";
+  };
+
   home.packages = with pkgs; [
     bat
     eza
@@ -74,17 +86,6 @@ in {
     vscode.profiles.Default.enable = true;
     zsh-syntax-highlighting.enable = true;
   };
-
-  # home.pointerCursor = {
-  #   name = "Bibata-Modern-Classic";
-  #   package = pkgs.bibata-cursors;
-  #   gtk.enable = true;
-  #   size = 24;
-  #   hyprcursor = {
-  #     enable = true;
-  #     size = 24;
-  #   };
-  # };
 
   wayland.windowManager.hyprland = {
     enable = true;
@@ -700,6 +701,8 @@ in {
       plugins = [
         "git"
         "sudo"
+        "zsh-peco-history"
+        "fast-syntax-highlighting"
       ];
       theme = "sentros";
     };
