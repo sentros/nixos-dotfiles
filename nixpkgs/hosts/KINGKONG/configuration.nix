@@ -54,7 +54,7 @@
     trim.enable = true;
   };
   boot.kernelModules = ["nct6775"];
-  boot.kernelParams = ["video=3840x2160@119.88"];
+  boot.kernelParams = ["video=HDMI-A-2:3840x2160@120"];
 
   # https://nix.catppuccin.com/options/main/nixos/catppuccin/
   catppuccin = {
@@ -172,27 +172,35 @@
 
   # List packages installed in system profile.
   # You can use https://search.nixos.org/ to find more packages (and options).
-  environment.systemPackages = with pkgs; [
-    wget
-    ghostty
-    kitty
-    git
-    vscode
-    hyprshot
-    nautilus
-    kdePackages.kwallet
-    dig
-    killall
-    peazip
-    lm_sensors
-    acpica-tools
-    stress-ng
-    blueberry
-    diff-so-fancy
-    wayland-utils
-    nvtopPackages.full
-  ];
-
+  environment = {
+    systemPackages = with pkgs; [
+      wget
+      ghostty
+      kitty
+      git
+      vscode
+      hyprshot
+      nautilus
+      kdePackages.kwallet
+      dig
+      killall
+      peazip
+      lm_sensors
+      acpica-tools
+      stress-ng
+      blueberry
+      diff-so-fancy
+      wayland-utils
+      nvtopPackages.full
+      nvidia-vaapi-driver
+      egl-wayland
+      ffmpeg
+    ];
+    variables = {
+      NVD_BACKEND = "direct";
+      LIBVA_DRIVER_NAME = "nvidia";
+    };
+  };
   fonts.packages = with pkgs; [
     jetbrains-mono
     nerd-fonts.hack
