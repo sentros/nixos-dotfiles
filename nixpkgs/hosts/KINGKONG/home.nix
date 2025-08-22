@@ -404,7 +404,7 @@ in {
     keyMode = "vi";
     mouse = true;
     shortcut = "b";
-    terminal = "tmux-256color";
+    terminal = "screen-256color";
     extraConfig = ''
       set-option -g status-position top
     '';
