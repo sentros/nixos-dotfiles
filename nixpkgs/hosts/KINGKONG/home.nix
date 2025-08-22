@@ -45,7 +45,7 @@ in {
     rev = "73615968d46cf172931946b00f89a59da0c124a5";
   };
 
-  # zsh-peco-history plugin
+  # zsh fast-syntax-highlighting plugin
   home.file.".oh-my-zsh/custom/plugins/fast-syntax-highlighting".source = builtins.fetchGit {
     url = "https://github.com/zdharma-continuum/fast-syntax-highlighting.git";
     rev = "3d574ccf48804b10dca52625df13da5edae7f553";
@@ -61,13 +61,38 @@ in {
     thunderbird
     pavucontrol
     pamixer
+    walker
+    gtk4-layer-shell
+    gnome-themes-extra
+    adwaita-icon-theme
+    libqalculate
+    peco
+    tealdeer
   ];
+
+  home.file.".config/walker" = {
+    source = ./walker;
+    recursive = true;
+  };
 
   gtk = {
     enable = true;
     theme = {
       name = "Adwaita-dark";
-      package = pkgs.gnome-themes-extra;
+    };
+    iconTheme = {
+      name = "Adwaita";
+    };
+    gtk3.extraConfig = {
+      Settings = ''
+        gtk-application-prefer-dark-theme=1
+      '';
+    };
+
+    gtk4.extraConfig = {
+      Settings = ''
+        gtk-application-prefer-dark-theme=1
+      '';
     };
   };
 
@@ -78,6 +103,7 @@ in {
     flavor = "mocha";
     bat.enable = true;
     btop.enable = true;
+    chromium.enable = true;
     cursors.enable = true;
     firefox.enable = true;
     fzf.enable = true;
@@ -276,354 +302,16 @@ in {
   programs.waybar = {
     enable = true;
     systemd.enable = true;
-    settings.mainBar = {
-      layer = "top";
-      position = "top";
-      spacing = 0;
-      mode = "dock";
-      gtk-layer-shell = true;
+    # settings = builtins.readFile ./waybar/config.jsonc;
+    style = builtins.readFile ./waybar/style.css;
+  };
 
-      modules-left = [
-        "custom/left"
-        "hyprland/workspaces"
-        "custom/right"
-        "custom/paddw"
-        "hyprland/window"
-      ];
-
-      modules-center = [
-        "clock"
-      ];
-      modules-right = [
-        "group/tray-expander"
-        "systemd-failed-units"
-        "bluetooth"
-        "network"
-        "pulseaudio"
-        "cpu"
-        "memory"
-        "temperature"
-        "custom/power-menu"
-      ];
-      "custom/left" = {
-        format = "";
-        tooltip = false;
-      };
-      "hyprland/workspaces" = {
-        on-click = "activate";
-        on-scroll-up = "hyprctl dispatch workspace -1";
-        on-scroll-down = "hyprctl dispatch workspace +1";
-        persistent-workspaces = {
-          "1" = "[]";
-          "2" = "[]";
-          "3" = "[]";
-          "4" = "[]";
-          "5" = "[]";
-        };
-      };
-      "custom/right" = {
-        format = "";
-        tooltip = false;
-      };
-      "custom/paddw" = {
-        format = " ";
-        tooltip = false;
-      };
-
-      "hyprland/window" = {
-        swap-icon-label = false;
-        format = "{}";
-        tooltip = false;
-        min-length = 5;
-        rewrite = {
-          "" = "<span foreground='#89b4fa'> </span> Hyprland";
-          "~" = "  Terminal";
-          zsh = "  Terminal";
-          "tmux(.*)" = "<span foreground='#a6e3a1'> </span> Tmux";
-          "(.*)Mozilla Firefox" = "<span foreground='#f38ba8'>󰈹 </span> Firefox";
-          "(.*) — Mozilla Firefox" = "<span foreground='#f38ba8'>󰈹 </span> $1";
-          nvim = "<span foreground='#a6e3a1'> </span> Neovim";
-          "nvim (.*)" = "<span foreground='#a6e3a1'> </span> $1";
-        };
-      };
-
-      clock = {
-        timezone = "Europe/Helsinki";
-        tooltip-format = "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
-        format = "{:%H:%M}";
-        format-alt = "{:%Y-%m-%d}";
-        min-length = 6;
-        max-lenght = 6;
-      };
-
-      network = {
-        format-icons = "[\"󰤯\",\"󰤟\",\"󰤢\",\"󰤥\",\"󰤨\"]";
-        format = "{icon}";
-        format-wifi = "{icon}";
-        format-ethernet = "󰀂";
-        format-disconnected = "󰖪";
-        tooltip-format-wifi = "{essid} ({frequency} GHz)\n⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}";
-        tooltip-format-ethernet = "⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}";
-        tooltip-format-disconnected = "Disconnected";
-        interval = 3;
-        nospacing = 1;
-      };
-
-      cpu = {
-        format = "󰍛 {usage}%";
-        tooltip = false;
-        interval = 5;
-        min-length = 6;
-        max-length = 6;
-        on-click = "ghostty -e btop";
-      };
-
-      memory = {
-        states = {
-          warning = 75;
-          critical = 90;
-        };
-        format = "󰘚 {percentage}%";
-        format-critical = "󰀦 {percentage}%";
-        tooltip = false;
-        interval = 5;
-        min-length = 7;
-        max-length = 7;
-      };
-
-      temperature = {
-        hwmon-path = "/sys/class/hwmon/hwmon2/temp13_input";
-        critical-threshold = 95;
-        format = "{temperatureC}°C ";
-      };
-
-      bluetooth = {
-        format = "";
-        format-disabled = "󰂲";
-        format-connected = "";
-        tooltip-format = "Devices connected: {num_connections}";
-        on-click = "blueberry";
-      };
-
-      "systemd-failed-units" = {
-        hide-on-ok = false;
-        format = "✗ {nr_failed}";
-        format-ok = "✓";
-        system = true;
-        user = true;
-      };
-      pulseaudio = {
-        format = "󰋋 {volume}%";
-        format-muted = "󰝟 {volume}%";
-        scroll-step = 5;
-        on-click = "pavucontrol";
-        tooltip-format = "Playing at {volume}%";
-        on-click-right = "swayosd-client --output-volume mute-toggle";
-      };
-      "custom/power-menu" = {
-        format = "󰐥";
-        tooltip = false;
-        on-click = pkgs.writeShellScript "power-menu" ''
-          #!/bin/bash
-
-          # Power menu from https://github.com/basecamp/omarchy/blob/master/bin/omarchy-power-menu
-          # Provides power off, restart, and sleep options
-
-          # Function to show power menu
-          show_power_menu() {
-            local menu_options="\u200B Lock
-          \u200C󰤄 Sleep
-          \u200D Relaunch
-          \u2060󰜉 Restart
-          󰐥\u2063 Shutdown" # These first characters are invisible sort keys
-
-            local selection=$(echo -e "$menu_options" | wofi --show dmenu --prompt "Power Options" --width 200 --height 250 -O alphabetical)
-
-            case "$selection" in
-            *Lock*) hyprlock ;;
-            *Sleep*) systemctl suspend ;;
-            *Relaunch*) hyprctl dispatch exit ;;
-            *Restart*) systemctl reboot ;;
-            *Shutdown*) systemctl poweroff ;;
-            esac
-          }
-
-          # Main execution
-          show_power_menu
-        '';
-      };
-      "group/tray-expander" = {
-        orientation = "inherit";
-        drawer = {
-          transition-duration = 600;
-          children-class = "tray-group-item";
-        };
-        modules = [
-          "custom/expand-icon"
-          "tray"
-        ];
-      };
-      "custom/expand-icon" = {
-        format = " ";
-        tooltip = false;
-      };
-      tray = {
-        icon-size = 12;
-        spacing = 12;
-      };
-    };
-    style = ''
-      * {
-          min-height: 0;
-          border: none;
-          margin: 0;
-          padding: 0;
-      }
-      window#waybar {
-        background: shade(#11111b, 0.5);
-      }
-      window#waybar > box {
-        background: #11111b;
-        margin: 2px;
-      }
-      tooltip {
-        background: #11111b;
-        border: 1.5px solid #cdd6f4;
-        border-radius: 8px;
-      }
-
-      tooltip label {
-        color: #cdd6f4;
-        margin: -1.5px 3px;
-      }
-
-      #workspaces
-      #window
-      #clock
-      #systemd-failed-units,
-      #bluetooth,
-      #network,
-      #pulseaudio,
-      #cpu,
-      #memory,
-      #temperature,
-      #custom-power-menu {
-        opacity: 1;
-        color: #cdd6f4;
-        padding: 0 10px;
-      }
-      #custom-left {
-        margin-bottom: 0;
-        text-shadow: -2px 0 2px rgba(0, 0, 0, 0.5);
-        color: #181825;
-        background: #11111b;
-        padding-left: 2px;
-      }
-      #workspaces {
-        background: #181825;
-      }
-      workspaces button {
-        color: #cdd6f4;
-        border-radius: 8px;
-        box-shadow: none;
-        margin: 2px 0;
-        padding: 0 2px;
-        transition: none;
-      }
-      #workspaces button:hover {
-        color: alpha(#cdd6f4, 0.75);
-        background: #313244;
-        text-shadow: none;
-      }
-      #workspaces button.active {
-        color: #11111b;
-        background: #9399b2;
-        text-shadow: 0 0 2px rgba(0, 0, 0, 0.6);
-        box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.4);
-        margin: 2px;
-        padding: 0 6px;
-      }
-      #custom-right {
-        color: #181825;
-        background: #11111b;
-        margin-bottom: 0;
-        padding-right: 3px;
-        text-shadow: 2px 0 2px rgba(0, 0, 0, 0.5);
-      }
-      #clock {
-        background: #313244;
-        margin-left: -2px;
-        padding: 0 3px 0 0;
-      }
-      #bluetooth {
-        background: #181825;
-        padding-right: 5px;
-      }
-
-      #bluetooth:hover {
-        color: alpha(#cdd6f4, 0.75);
-      }
-      #network {
-        background: #181825;
-        padding: 0 8px 0 5px;
-      }
-
-      #network:hover {
-        color: alpha(#cdd6f4, 0.75);
-      }
-      #pulseaudio {
-        background: #181825;
-      }
-
-      #pulseaudio:hover {
-        color: alpha(#cdd6f4, 0.75);
-      }
-      #cpu {
-        background: #313244;
-      }
-      #memory {
-        background: #1e1e2e;
-        padding: 0 0 0 1px;
-      }
-
-      #memory.warning {
-        color: #f9e2af;
-      }
-
-      #memory.critical {
-        color: #f38ba8;
-      }
-      #temperature {
-        background: #181825;
-        padding: 0 0 0 10px;
-      }
-      #custom-power-menu {
-        color: #11111b;
-        background: #9399b2;
-        text-shadow: 0 0 2px rgba(0, 0, 0, 0.6);
-        box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.6);
-        border-radius: 10px;
-        margin: 2px 4px 2px 0;
-        padding: 0 6px 0 9px;
-      }
-
-      #custom-power-menu:hover {
-        color: alpha(#cdd6f4, 0.75);
-        background: #313244;
-        text-shadow: none;
-        box-shadow: none;
-      }
-      * {
-        font-family: "JetBrainsMono Nerd Font";
-        font-size: 16px;
-        font-weight: bold;
-      }
-
-      tooltip label,
-      #window label {
-        font-weight: normal;
-      }
-    '';
+  # write waybar config
+  home.file.".config/waybar/config.jsonc".source = ./waybar/config.jsonc;
+  # write power-menu
+  home.file.".config/waybar/power-menu.sh" = {
+    source = ./waybar/power-menu.sh;
+    executable = true;
   };
 
   services.hyprpaper = {
@@ -846,6 +534,34 @@ in {
 
   programs.firefox = {
     enable = true;
+  };
+
+  programs.chromium.enable = true;
+  xdg.desktopEntries = {
+    chatgpt = {
+      name = "ChatGPT";
+      comment = "ChatGPT";
+      exec = "chromium --new-window --ozone-platform=wayland --app=https://chatgpt.com/ --name=ChatGPT --class=ChatGPT";
+      terminal = false;
+      type = "Application";
+      icon = builtins.fetchurl {
+        url = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/chatgpt.png";
+        sha256 = "1bgm6b0gljl9kss4f246chblw40a4h4j93bl70a6i0bi05zim22f";
+      };
+      startupNotify = true;
+    };
+    whatsapp = {
+      name = "WhatsApp";
+      comment = "WhatsApp";
+      exec = "chromium --new-window --ozone-platform=wayland --app=https://web.whatsapp.com/ --name=WhatsApp --class=WhatsApp";
+      terminal = false;
+      type = "Application";
+      icon = builtins.fetchurl {
+        url = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/whatsapp.png";
+        sha256 = "1z70kvad27gizhbdr6j4115cks5n0015qvn79hpf56z8nnaf0xm2";
+      };
+      startupNotify = true;
+    };
   };
 
   programs.lutris = {

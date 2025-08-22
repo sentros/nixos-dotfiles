@@ -33,13 +33,14 @@
 
   # Current ZFS support is up to 6.15 kernel
   boot.kernelPackages = pkgs.linuxKernel.packages.linux_6_15;
-  # Use the systemd-boot EFI boot loader.
   boot.loader = {
+    systemd-boot.enable = false;
     grub = {
       enable = true;
       zfsSupport = true;
       efiSupport = true;
       efiInstallAsRemovable = true;
+      # useOSProber = true;
       mirroredBoots = [
         {
           devices = ["nodev"];
@@ -54,7 +55,7 @@
     trim.enable = true;
   };
   boot.kernelModules = ["nct6775"];
-  boot.kernelParams = ["video=HDMI-A-2:3840x2160@120"];
+  boot.kernelParams = ["video=HDMI-A-2:1920x1080@@120"];
 
   # https://nix.catppuccin.com/options/main/nixos/catppuccin/
   catppuccin = {
@@ -63,7 +64,7 @@
     sddm.enable = true;
     tty.enable = true;
   };
-  # Define a user account. Don't forget to set a password with ‘passwd’.
+
   users.users.john = {
     isNormalUser = true;
     extraGroups = ["wheel" "audio"]; # Enable ‘sudo’ for the user.
@@ -97,7 +98,10 @@
   time.timeZone = "Europe/Helsinki";
 
   # Select internationalisation properties.
-  i18n.defaultLocale = "en_US.UTF-8";
+  i18n = {
+    inputMethod.fcitx5.waylandFrontend = true;
+    defaultLocale = "en_US.UTF-8";
+  };
   console = {
     keyMap = "fi";
   };
@@ -143,8 +147,18 @@
   services.smartd = {
     enable = true;
   };
+
+  services.scrutiny.enable = true;
+
   # Enable CUPS to print documents.
   services.printing.enable = true;
+  services.printing.drivers = [pkgs.brlaser];
+  services.printing.stateless = true;
+  services.avahi = {
+    enable = true;
+    nssmdns4 = true;
+    openFirewall = true;
+  };
 
   # Enable sound.
   services.pulseaudio = {
@@ -189,12 +203,15 @@
       acpica-tools
       stress-ng
       blueberry
+      bluetui
+      usbutils
       diff-so-fancy
       wayland-utils
       nvtopPackages.full
       nvidia-vaapi-driver
       egl-wayland
       ffmpeg
+      wl-clipboard
     ];
     variables = {
       NVD_BACKEND = "direct";

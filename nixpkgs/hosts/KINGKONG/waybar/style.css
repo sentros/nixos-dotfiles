@@ -1,0 +1,147 @@
+* {
+    min-height: 0;
+    border: none;
+    margin: 0;
+    padding: 0;
+}
+window#waybar {
+    background: shade(#11111b, 0.5);
+}
+window#waybar > box {
+    background: #11111b;
+    margin: 2px;
+}
+tooltip {
+    background: #11111b;
+    border: 1.5px solid #cdd6f4;
+    border-radius: 8px;
+}
+
+tooltip label {
+    color: #cdd6f4;
+    margin: -1.5px 3px;
+}
+
+#workspaces #window #clock #systemd-failed-units,
+#bluetooth,
+#network,
+#pulseaudio,
+#cpu,
+#memory,
+#temperature,
+#custom-power-menu {
+    opacity: 1;
+    color: #cdd6f4;
+    padding: 0 10px;
+}
+#custom-left {
+    margin-bottom: 0;
+    text-shadow: -2px 0 2px rgba(0, 0, 0, 0.5);
+    color: #181825;
+    background: #11111b;
+    padding-left: 2px;
+}
+#workspaces {
+    background: #181825;
+}
+workspaces button {
+    color: #cdd6f4;
+    border-radius: 8px;
+    box-shadow: none;
+    margin: 2px 0;
+    padding: 0 2px;
+    transition: none;
+}
+#workspaces button:hover {
+    color: alpha(#cdd6f4, 0.75);
+    background: #313244;
+    text-shadow: none;
+}
+#workspaces button.active {
+    color: #11111b;
+    background: #9399b2;
+    text-shadow: 0 0 2px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.4);
+    margin: 2px;
+    padding: 0 6px;
+}
+#custom-right {
+    color: #181825;
+    background: #11111b;
+    margin-bottom: 0;
+    padding-right: 3px;
+    text-shadow: 2px 0 2px rgba(0, 0, 0, 0.5);
+}
+#clock {
+    background: #313244;
+    margin-left: -2px;
+    padding: 0 3px 0 0;
+}
+#bluetooth {
+    background: #181825;
+    padding-right: 5px;
+}
+
+#bluetooth:hover {
+    color: alpha(#cdd6f4, 0.75);
+}
+#network {
+    background: #181825;
+    padding: 0 8px 0 5px;
+}
+
+#network:hover {
+    color: alpha(#cdd6f4, 0.75);
+}
+#pulseaudio {
+    background: #181825;
+}
+
+#pulseaudio:hover {
+    color: alpha(#cdd6f4, 0.75);
+}
+#cpu {
+    background: #313244;
+}
+#memory {
+    background: #1e1e2e;
+    padding: 0 0 0 1px;
+}
+
+#memory.warning {
+    color: #f9e2af;
+}
+
+#memory.critical {
+    color: #f38ba8;
+}
+#temperature {
+    background: #181825;
+    padding: 0 0 0 10px;
+}
+#custom-power-menu {
+    color: #11111b;
+    background: #9399b2;
+    text-shadow: 0 0 2px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.6);
+    border-radius: 10px;
+    margin: 2px 4px 2px 0;
+    padding: 0 6px 0 9px;
+}
+
+#custom-power-menu:hover {
+    color: alpha(#cdd6f4, 0.75);
+    background: #313244;
+    text-shadow: none;
+    box-shadow: none;
+}
+* {
+    font-family: "JetBrainsMono Nerd Font";
+    font-size: 16px;
+    font-weight: bold;
+}
+
+tooltip label,
+#window label {
+    font-weight: normal;
+}
