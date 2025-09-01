@@ -3,34 +3,39 @@
   pkgs,
   lib,
   osConfig,
+  inputs,
   ...
 }: let
-  customOhMyZshTheme = ''
-    autoload -Uz vcs_info
+  customOhMyZshTheme =
+    /*
+    bash
+    */
+    ''
+      autoload -Uz vcs_info
 
-    zstyle ':vcs_info:*' stagedstr '%F{green}●'
-    zstyle ':vcs_info:*' unstagedstr '%F{yellow}●'
-    zstyle ':vcs_info:*' check-for-changes true
-    zstyle ':vcs_info:svn:*' branchformat '%b'
-    zstyle ':vcs_info:svn:*' formats ' [%b%F{1}:%F{11}%i%c%u%B%F{green}]'
-    zstyle ':vcs_info:*' enable git svn
+      zstyle ':vcs_info:*' stagedstr '%F{green}●'
+      zstyle ':vcs_info:*' unstagedstr '%F{yellow}●'
+      zstyle ':vcs_info:*' check-for-changes true
+      zstyle ':vcs_info:svn:*' branchformat '%b'
+      zstyle ':vcs_info:svn:*' formats ' [%b%F{1}:%F{11}%i%c%u%B%F{green}]'
+      zstyle ':vcs_info:*' enable git svn
 
-    theme_precmd () {
-      if [[ -z $(git ls-files --other --exclude-standard 2> /dev/null) ]]; then
-        zstyle ':vcs_info:git:*' formats ' [%b%c%u%B%F{green}]'
-      else
-        zstyle ':vcs_info:git:*' formats ' [%b%c%u%B%F{red}●%F{green}]'
-      fi
+      theme_precmd () {
+        if [[ -z $(git ls-files --other --exclude-standard 2> /dev/null) ]]; then
+          zstyle ':vcs_info:git:*' formats ' [%b%c%u%B%F{green}]'
+        else
+          zstyle ':vcs_info:git:*' formats ' [%b%c%u%B%F{red}●%F{green}]'
+        fi
 
-      vcs_info
-    }
+        vcs_info
+      }
 
-    setopt prompt_subst
-    PROMPT='[%*] %B%F{magenta}%~%B%F{green}''${vcs_info_msg_0_}%B%F{magenta} %{$reset_color%}%% '
+      setopt prompt_subst
+      PROMPT='[%*] %B%F{magenta}%~%B%F{green}''${vcs_info_msg_0_}%B%F{magenta} %{$reset_color%}%% '
 
-    autoload -U add-zsh-hook
-    add-zsh-hook precmd  theme_precmd
-  '';
+      autoload -U add-zsh-hook
+      add-zsh-hook precmd  theme_precmd
+    '';
 in {
   home.username = "john";
   home.homeDirectory = "/home/john";
@@ -68,12 +73,23 @@ in {
     libqalculate
     peco
     tealdeer
+    discord
   ];
 
-  home.file.".config/walker" = {
-    source = ./walker;
-    recursive = true;
-  };
+  # home.file.".config/walker" = {
+  #   source = ./walker;
+  #   recursive = true;
+  # };
+  home.activation.copyWalkerConfig =
+    lib.hm.dag.entryAfter ["writeBoundary"]
+    /*
+    bash
+    */
+    ''
+      mkdir -p ~/.config/walker
+      cp -rn ${./walker}/* ~/.config/walker/
+      chmod -R u+rw ~/.config/walker
+    '';
 
   gtk = {
     enable = true;
@@ -116,6 +132,9 @@ in {
   wayland.windowManager.hyprland = {
     enable = true;
     extraConfig = builtins.readFile ./hypr/hyprland.conf;
+    plugins = [
+      inputs.hyprland-plugins.packages."${pkgs.system}".hyprfocus
+    ];
   };
 
   # Allow unlocking 1password etc with system authentication
@@ -147,81 +166,85 @@ in {
       image_size = 40;
       gtk_dark = true;
     };
-    style = ''
-      @define-color	selected-text  #8caaee;
-      @define-color	text  #c6d0f5;
-      @define-color	base  #24273a;
+    style =
+      /*
+      css
+      */
+      ''
+        @define-color	selected-text  #8caaee;
+        @define-color	text  #c6d0f5;
+        @define-color	base  #24273a;
 
-      * {
-      font-family: 'CaskaydiaMono Nerd Font', monospace;
-      font-size: 18px;
-      }
+        * {
+        font-family: 'CaskaydiaMono Nerd Font', monospace;
+        font-size: 18px;
+        }
 
-      window {
-      margin: 0px;
-      padding: 20px;
-      background-color: @base;
-      opacity: 0.95;
-      }
+        window {
+        margin: 0px;
+        padding: 20px;
+        background-color: @base;
+        opacity: 0.95;
+        }
 
-      #inner-box {
-      margin: 0;
-      padding: 0;
-      border: none;
-      background-color: @base;
-      }
+        #inner-box {
+        margin: 0;
+        padding: 0;
+        border: none;
+        background-color: @base;
+        }
 
-      #outer-box {
-      margin: 0;
-      padding: 20px;
-      border: none;
-      background-color: @base;
-      }
+        #outer-box {
+        margin: 0;
+        padding: 20px;
+        border: none;
+        background-color: @base;
+        }
 
-      #scroll {
-      margin: 0;
-      padding: 0;
-      border: none;
-      background-color: @base;
-      }
+        #scroll {
+        margin: 0;
+        padding: 0;
+        border: none;
+        background-color: @base;
+        }
 
-      #input {
-      margin: 0;
-      padding: 10px;
-      border: none;
-      background-color: @base;
-      color: @text;
-      }
+        #input {
+        margin: 0;
+        padding: 10px;
+        border: none;
+        background-color: @base;
+        color: @text;
+        }
 
-      #input:focus {
-      outline: none;
-      box-shadow: none;
-      border: none;
-      }
+        #input:focus {
+        outline: none;
+        box-shadow: none;
+        border: none;
+        }
 
-      #text {
-      margin: 5px;
-      border: none;
-      color: @text;
-      }
+        #text {
+        margin: 5px;
+        border: none;
+        color: @text;
+        }
 
-      #entry {
-      background-color: @base;
-      }
+        #entry {
+        background-color: @base;
+        }
 
-      #entry:selected {
-      outline: none;
-      border: none;
-      }
+        #entry:selected {
+        outline: none;
+        border: none;
+        }
 
-      #entry:selected #text {
-      color: @selected-text;
-      }
+        #entry:selected #text {
+        color: @selected-text;
+        }
 
-      #entry image {
-      -gtk-icon-transform: scale(0.7);
-      }
-    '';
+        #entry image {
+        -gtk-icon-transform: scale(0.7);
+        }
+      '';
   };
   # Configure idle times that lock / suspend machine in hyprland
   services.hypridle = {
@@ -405,23 +428,33 @@ in {
     mouse = true;
     shortcut = "b";
     terminal = "screen-256color";
-    extraConfig = ''
-      set-option -g status-position top
-    '';
+    extraConfig =
+      /*
+      tmux
+      */
+      ''
+        # Enable clipboard
+        set -g set-clipboard on
+        set-option -g status-position top
+      '';
     plugins = with pkgs; [
       {
         plugin = tmuxPlugins.catppuccin;
-        extraConfig = ''
-          set -g @catppuccin_flavor "mocha"
-          set -g @catppuccin_window_status_style "rounded"
-          set -g status-right-length 100
-          set -g status-left-length 100
-          set -g status-left ""
-          set -g status-right "#{E:@catppuccin_status_application}"
-          set -agF status-right "#{E:@catppuccin_status_cpu}"
-          set -ag status-right "#{E:@catppuccin_status_session}"
-          set -ag status-right "#{E:@catppuccin_status_uptime}"
-        '';
+        extraConfig =
+          /*
+          tmux
+          */
+          ''
+            set -g @catppuccin_flavor "mocha"
+            set -g @catppuccin_window_status_style "rounded"
+            set -g status-right-length 100
+            set -g status-left-length 100
+            set -g status-left ""
+            set -g status-right "#{E:@catppuccin_status_application}"
+            set -agF status-right "#{E:@catppuccin_status_cpu}"
+            set -ag status-right "#{E:@catppuccin_status_session}"
+            set -ag status-right "#{E:@catppuccin_status_uptime}"
+          '';
       }
       tmuxPlugins.cpu
     ];
@@ -501,14 +534,17 @@ in {
 
       arch = true;
     };
-    # settingsPerApplication = {
-    #   Civ7_linux_Vulkan_FinalRelease = {
-    #     fps_limit = 60;
-    #   };
-    #   Civ7_Win64_DX12 = {
-    #     fps_limit = 60;
-    #   };
-    # };
+    settingsPerApplication = {
+      "CivilizationVI_DX12.exe" = {
+        fps_limit = 120;
+      };
+      #   Civ7_linux_Vulkan_FinalRelease = {
+      #     fps_limit = 60;
+      #   };
+      #   Civ7_Win64_DX12 = {
+      #     fps_limit = 60;
+      #   };
+    };
   };
 
   programs.git = {

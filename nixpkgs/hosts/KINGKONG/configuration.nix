@@ -111,6 +111,7 @@
     enable = true;
     withUWSM = true;
     xwayland.enable = true;
+    package = inputs.hyprland.packages."${pkgs.system}".hyprland;
   };
 
   # Use sddm for graphical login
@@ -132,16 +133,23 @@
       ${lib.getExe' config.systemd.package "udevadm"} trigger -c bind -s usb -a idVendor=320f -a idProduct=5044
     '';
   };
-  services.udev.extraRules = ''
-    # disable USB auto suspend for Razer DeathAdder V3 Pro
-    ACTION=="bind", SUBSYSTEM=="usb", ATTR{idVendor}=="1532", ATTR{idProduct}=="00b7", TEST=="power/control", ATTR{power/control}="on"
-    # disable USB auto suspend for Glorious GMMK Pro ISO
-    ACTION=="bind", SUBSYSTEM=="usb", ATTR{idVendor}=="320f", ATTR{idProduct}=="5044", TEST=="power/control", ATTR{power/control}="on"
-  '';
+  services.udev.extraRules =
+    /*
+    ini
+    */
+    ''
+      # disable USB auto suspend for Razer DeathAdder V3 Pro
+      ACTION=="bind", SUBSYSTEM=="usb", ATTR{idVendor}=="1532", ATTR{idProduct}=="00b7", TEST=="power/control", ATTR{power/control}="on"
+      # disable USB auto suspend for Glorious GMMK Pro ISO
+      ACTION=="bind", SUBSYSTEM=="usb", ATTR{idVendor}=="320f", ATTR{idProduct}=="5044", TEST=="power/control", ATTR{power/control}="on"
+    '';
 
   # Enable OpenGL
   hardware.graphics = {
     enable = true;
+    extraPackages = with pkgs; [
+      nvidia-vaapi-driver
+    ];
   };
 
   services.smartd = {
@@ -208,12 +216,11 @@
       diff-so-fancy
       wayland-utils
       nvtopPackages.full
-      nvidia-vaapi-driver
       egl-wayland
       ffmpeg
       wl-clipboard
     ];
-    variables = {
+    sessionVariables = {
       NVD_BACKEND = "direct";
       LIBVA_DRIVER_NAME = "nvidia";
     };
