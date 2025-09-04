@@ -12,6 +12,10 @@
       url = "github:hyprwm/hyprland-plugins";
       inputs.hyprland.follows = "hyprland";
     };
+    waybar = {
+      url = "github:Alexays/Waybar/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nvf.url = "github:notashelf/nvf";
     catppuccin.url = "github:catppuccin/nix";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
@@ -25,6 +29,7 @@
     nixos-hardware,
     hyprland,
     hyprland-plugins,
+    waybar,
     ...
   }: {
     nixosConfigurations.KINGKONG = nixpkgs.lib.nixosSystem {

@@ -74,6 +74,8 @@ in {
     peco
     tealdeer
     discord
+    protonup-qt
+    prettier
   ];
 
   # home.file.".config/walker" = {
@@ -327,6 +329,7 @@ in {
     systemd.enable = true;
     # settings = builtins.readFile ./waybar/config.jsonc;
     style = builtins.readFile ./waybar/style.css;
+    package = inputs.waybar.packages.x86_64-linux.waybar;
   };
 
   # write waybar config
@@ -521,7 +524,7 @@ in {
       ## FPS ##
       fps = true;
       fps_color_change = "F38BA8,F9E2AF,A6E3A1";
-      fps_limit = 60;
+      fps_limit = 120;
       fps_limit_method = "early";
 
       ## Wine ##
