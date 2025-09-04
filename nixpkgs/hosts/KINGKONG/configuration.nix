@@ -110,7 +110,12 @@
       pulse.enable = false;
     };
 
-    openssh.enable = true;
+    openssh = {
+      enable = true;
+      settings = {
+        AllowUsers = ["john"];
+      };
+    };
 
     gnome.gnome-keyring.enable = true;
     udisks2.enable = true;
