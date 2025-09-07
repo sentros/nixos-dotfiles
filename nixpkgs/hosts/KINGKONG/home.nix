@@ -76,6 +76,9 @@ in {
     discord
     protonup-qt
     prettier
+    qdirstat
+    tmuxPlugins.catppuccin
+    tmuxPlugins.cpu
   ];
 
   # home.file.".config/walker" = {
@@ -448,8 +451,34 @@ in {
           tmux
           */
           ''
+            # Enable clipboard
+            set -g set-clipboard on
+            # Address vim mode switching delay (http://superuser.com/a/252717/65504)
+            set -s escape-time 0
+            # Increase scrollback buffer size from 2000 to 50000 lines
+            set -g history-limit 50000
+            # Increase tmux messages display duration from 750ms to 4s
+            set -g display-time 4000
+            # Refresh 'status-left' and 'status-right' more often, from every 15s to 1s
+            set -g status-interval 1
+            # Focus events enabled for terminals that support them
+            set -g focus-events on
+            # Super useful when using "grouped sessions" and multi-monitor setup
+            setw -g aggressive-resize on
+
+            # I prefer status on top
+            set-option -g status-position top
+            # Configure catppuccin plugin
             set -g @catppuccin_flavor "mocha"
             set -g @catppuccin_window_status_style "rounded"
+            # Configure catppuccin kube module
+            set -g @catppuccin_kube_context_color "#{@thm_red}"
+            set -g @catppuccin_kube_namespace_color "#{@thm_sky}"
+
+            # Load catppuccin plugin
+            run ${pkgs.tmuxPlugins.catppuccin.outPath}/share/tmux-plugins/catppuccin/catppuccin.tmux
+
+            # Make the status line pretty and add some modules
             set -g status-right-length 100
             set -g status-left-length 100
             set -g status-left ""
@@ -457,6 +486,9 @@ in {
             set -agF status-right "#{E:@catppuccin_status_cpu}"
             set -ag status-right "#{E:@catppuccin_status_session}"
             set -ag status-right "#{E:@catppuccin_status_uptime}"
+
+            # Load cpu plugin
+            run ${pkgs.tmuxPlugins.cpu.outPath}/share/tmux-plugins/cpu/cpu.tmux
           '';
       }
       tmuxPlugins.cpu

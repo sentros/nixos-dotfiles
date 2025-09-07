@@ -100,6 +100,31 @@ workspaces button {
 #pulseaudio:hover {
     color: alpha(#cdd6f4, 0.75);
 }
+
+#idle_inhibitor {
+    background: #181825;
+    padding: 0 8px 0 5px;
+}
+
+#idle_inhibitor:hover {
+    color: alpha(#cdd6f4, 0.75);
+}
+#systemd-failed-units {
+    background: #181825;
+    padding: 0 2px 0 5px;
+}
+
+#systemd-failed-units:hover {
+    color: alpha(#cdd6f4, 0.75);
+}
+#group-tray-expander {
+    background: #181825;
+    padding: 0 8px 0 5px;
+}
+
+#group-tray-expander:hover {
+    color: alpha(#cdd6f4, 0.75);
+}
 #cpu {
     background: #313244;
 }

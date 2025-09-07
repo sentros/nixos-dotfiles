@@ -99,7 +99,16 @@
         ACTION=="bind", SUBSYSTEM=="usb", ATTR{idVendor}=="320f", ATTR{idProduct}=="5044", TEST=="power/control", ATTR{power/control}="on"
       '';
 
-    printing.enable = true;
+    printing = {
+      enable = true;
+      stateless = true;
+      drivers = [pkgs.brlaser];
+    };
+    avahi = {
+      enable = true;
+      nssmdns4 = true;
+      openFirewall = true;
+    };
     smartd.enable = true;
 
     pulseaudio = {
