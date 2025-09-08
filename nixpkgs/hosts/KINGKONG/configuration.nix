@@ -14,11 +14,19 @@
     ./nvf.nix
   ];
 
-  nix.settings.experimental-features = [
-    "nix-command"
-    "flakes"
-  ];
+  nix.settings = {
+    system-features = ["gccarch-znver5"];
+    experimental-features = [
+      "nix-command"
+      "flakes"
+    ];
+  };
   nixpkgs.config = {
+    hostPlatform = {
+      gcc.arch = "znver5";
+      gcc.tune = "znver5";
+      system = "x86_64-linux";
+    };
     allowUnfree = true;
     cudaSupport = true;
     rocmSupport = true;
@@ -107,7 +115,7 @@
     avahi = {
       enable = true;
       nssmdns4 = true;
-      openFirewall = true;
+      # openFirewall = true;
     };
     smartd.enable = true;
 

@@ -44,16 +44,18 @@ in {
   # write oh-my-zsh theme file
   home.file.".oh-my-zsh/custom/themes/sentros.zsh-theme".text = customOhMyZshTheme;
 
-  # zsh-peco-history plugin
-  home.file.".oh-my-zsh/custom/plugins/zsh-peco-history".source = builtins.fetchGit {
-    url = "https://github.com/jimeh/zsh-peco-history";
+  # zsh-peco-history plugin for oh-my-zsh
+  home.file.".oh-my-zsh/custom/plugins/zsh-peco-history".source = pkgs.fetchgit {
+    url = "https://github.com/jimeh/zsh-peco-history.git";
     rev = "73615968d46cf172931946b00f89a59da0c124a5";
+    sha256 = "sha256-lEgisjuLrnetIUG0fXl9vH3/ZHgpyQviy7rJazCkMTs=";
   };
 
   # zsh fast-syntax-highlighting plugin
-  home.file.".oh-my-zsh/custom/plugins/fast-syntax-highlighting".source = builtins.fetchGit {
+  home.file.".oh-my-zsh/custom/plugins/fast-syntax-highlighting".source = pkgs.fetchgit {
     url = "https://github.com/zdharma-continuum/fast-syntax-highlighting.git";
     rev = "3d574ccf48804b10dca52625df13da5edae7f553";
+    sha256 = "sha256-ZihUL4JAVk9V+IELSakytlb24BvEEJ161CQEHZYYoSA=";
   };
 
   home.packages = with pkgs; [
