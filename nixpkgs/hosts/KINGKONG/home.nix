@@ -36,68 +36,78 @@
       autoload -U add-zsh-hook
       add-zsh-hook precmd  theme_precmd
     '';
+
+  dotfiles = "${config.home.homeDirectory}/nixos-dotfiles/config";
+  create_symlink = path: config.lib.file.mkOutOfStoreSymlink path;
+  dots = {
+    hypr = "hypr";
+    waybar = "waybar";
+    swayosd = "swayosd";
+    walker = "walker";
+  };
 in {
-  home.username = "john";
-  home.homeDirectory = "/home/john";
-  home.stateVersion = "25.05";
+  home = {
+    username = "john";
+    homeDirectory = "/home/john";
+    stateVersion = "25.05";
 
-  # write oh-my-zsh theme file
-  home.file.".oh-my-zsh/custom/themes/sentros.zsh-theme".text = customOhMyZshTheme;
+    # write oh-my-zsh theme file
+    file.".oh-my-zsh/custom/themes/sentros.zsh-theme".text = customOhMyZshTheme;
 
-  # zsh-peco-history plugin for oh-my-zsh
-  home.file.".oh-my-zsh/custom/plugins/zsh-peco-history".source = pkgs.fetchgit {
-    url = "https://github.com/jimeh/zsh-peco-history.git";
-    rev = "73615968d46cf172931946b00f89a59da0c124a5";
-    sha256 = "sha256-lEgisjuLrnetIUG0fXl9vH3/ZHgpyQviy7rJazCkMTs=";
+    # zsh-peco-history plugin for oh-my-zsh
+    file.".oh-my-zsh/custom/plugins/zsh-peco-history".source = pkgs.fetchgit {
+      url = "https://github.com/jimeh/zsh-peco-history.git";
+      rev = "73615968d46cf172931946b00f89a59da0c124a5";
+      sha256 = "sha256-lEgisjuLrnetIUG0fXl9vH3/ZHgpyQviy7rJazCkMTs=";
+    };
+
+    # zsh fast-syntax-highlighting plugin
+    file.".oh-my-zsh/custom/plugins/fast-syntax-highlighting".source = pkgs.fetchgit {
+      url = "https://github.com/zdharma-continuum/fast-syntax-highlighting.git";
+      rev = "3d574ccf48804b10dca52625df13da5edae7f553";
+      sha256 = "sha256-ZihUL4JAVk9V+IELSakytlb24BvEEJ161CQEHZYYoSA=";
+    };
+
+    packages = with pkgs; [
+      bat
+      eza
+      telegram-desktop
+      tree
+      nixfmt-rfc-style
+      libreoffice
+      thunderbird
+      pavucontrol
+      pamixer
+      walker
+      gtk4-layer-shell
+      gnome-themes-extra
+      adwaita-icon-theme
+      libqalculate
+      peco
+      tealdeer
+      discord
+      protonup-qt
+      prettier
+      qdirstat
+      tmuxPlugins.catppuccin
+      tmuxPlugins.cpu
+    ];
+
+    # file.".config/walker" = {
+    #   source = ./walker;
+    #   recursive = true;
+    # };
+    # activation.copyWalkerConfig =
+    #   lib.hm.dag.entryAfter ["writeBoundary"]
+    #   /*
+    #   bash
+    #   */
+    #   ''
+    #     mkdir -p ~/.config/walker
+    #     cp -rn ${./walker}/* ~/.config/walker/
+    #     chmod -R u+rw ~/.config/walker
+    #   '';
   };
-
-  # zsh fast-syntax-highlighting plugin
-  home.file.".oh-my-zsh/custom/plugins/fast-syntax-highlighting".source = pkgs.fetchgit {
-    url = "https://github.com/zdharma-continuum/fast-syntax-highlighting.git";
-    rev = "3d574ccf48804b10dca52625df13da5edae7f553";
-    sha256 = "sha256-ZihUL4JAVk9V+IELSakytlb24BvEEJ161CQEHZYYoSA=";
-  };
-
-  home.packages = with pkgs; [
-    bat
-    eza
-    telegram-desktop
-    tree
-    nixfmt-rfc-style
-    libreoffice
-    thunderbird
-    pavucontrol
-    pamixer
-    walker
-    gtk4-layer-shell
-    gnome-themes-extra
-    adwaita-icon-theme
-    libqalculate
-    peco
-    tealdeer
-    discord
-    protonup-qt
-    prettier
-    qdirstat
-    tmuxPlugins.catppuccin
-    tmuxPlugins.cpu
-  ];
-
-  # home.file.".config/walker" = {
-  #   source = ./walker;
-  #   recursive = true;
-  # };
-  home.activation.copyWalkerConfig =
-    lib.hm.dag.entryAfter ["writeBoundary"]
-    /*
-    bash
-    */
-    ''
-      mkdir -p ~/.config/walker
-      cp -rn ${./walker}/* ~/.config/walker/
-      chmod -R u+rw ~/.config/walker
-    '';
-
   gtk = {
     enable = true;
     theme = {
@@ -136,23 +146,19 @@ in {
     zsh-syntax-highlighting.enable = true;
   };
 
-  wayland.windowManager.hyprland = {
-    enable = true;
-    extraConfig = builtins.readFile ./hypr/hyprland.conf;
-    plugins = [
-      inputs.hyprland-plugins.packages."${pkgs.system}".hyprfocus
-    ];
-  };
+  # wayland.windowManager.hyprland = {
+  #   enable = true;
+  #   # extraConfig = builtins.readFile ./hypr/hyprland.conf;
+  #   # plugins = [
+  #   #   inputs.hyprland-plugins.packages."${pkgs.system}".hyprfocus
+  #   # ];
+  # };
 
   # Allow unlocking 1password etc with system authentication
   services.hyprpolkitagent.enable = true;
 
   # Volume, capslock etc osd
   services.swayosd.enable = true;
-
-  # write oh-my-zsh theme file
-  # home.file.".config/swayosd/style.css".text = builtins.readFile ./swayosd/style.css;
-  home.file.".config/swayosd".source = ./swayosd;
 
   programs.wofi = {
     enable = true;
@@ -256,103 +262,93 @@ in {
   # Configure idle times that lock / suspend machine in hyprland
   services.hypridle = {
     enable = true;
-    settings = {
-      general = {
-        lock_cmd = "pidof hyprlock || hyprlock";
-        before_sleep_cmd = "loginctl lock-session";
-        after_sleep_cmd = "hyprctl dispatch dpms on";
-      };
-
-      listener = [
-        {
-          timeout = 300;
-          on-timeout = "loginctl lock-session";
-        }
-        {
-          timeout = 330;
-          on-timeout = "hyprctl dispatch dpms off";
-          on-resume = "hyprctl dispatch dpms on";
-        }
-        {
-          timeout = 1800;
-          on-timeout = "systemctl suspend";
-        }
-      ];
-    };
+    # settings = {
+    #   general = {
+    #     lock_cmd = "pidof hyprlock || hyprlock";
+    #     before_sleep_cmd = "loginctl lock-session";
+    #     after_sleep_cmd = "hyprctl dispatch dpms on";
+    #   };
+    #
+    #   listener = [
+    #     {
+    #       timeout = 300;
+    #       on-timeout = "loginctl lock-session";
+    #     }
+    #     {
+    #       timeout = 330;
+    #       on-timeout = "hyprctl dispatch dpms off";
+    #       on-resume = "hyprctl dispatch dpms on";
+    #     }
+    #     {
+    #       timeout = 1800;
+    #       on-timeout = "systemctl suspend";
+    #     }
+    #   ];
+    # };
   };
 
   # Configure lock screen and behaviour in hyprland
   programs.hyprlock = {
     enable = true;
-    settings = {
-      general = {
-        disable_loading_bar = true;
-        hide_cursor = false;
-        no_fade_in = false;
-      };
-
-      background = [
-        {
-          color = "rgba(24,24,36,1.0)";
-        }
-      ];
-
-      animations = {
-        enabled = false;
-      };
-
-      input-field = [
-        {
-          size = "600, 100";
-          position = "0, 0";
-          monitor = "";
-
-          inner_color = "rgba(24,24,36,0.8)";
-          outer_color = "rgba(205,214,244,1.0)";
-          outline_thickness = 4;
-
-          font_family = "CaskaydiaMono Nerd Font";
-          font_size = 32;
-          font_color = "rgba(205,214,244,1.0)";
-
-          placeholder_color = "rgba(205,214,244,0.6)";
-          placeholder_text = "Enter Password";
-          check_color = "rgba(68, 157, 171, 1.0)";
-          fail_text = "Wrong";
-
-          rounding = 0;
-          shadow_passes = 0;
-          fade_on_empty = false;
-        }
-      ];
-    };
+    # settings = {
+    #   general = {
+    #     disable_loading_bar = true;
+    #     hide_cursor = false;
+    #     no_fade_in = false;
+    #   };
+    #
+    #   background = [
+    #     {
+    #       color = "rgba(24,24,36,1.0)";
+    #     }
+    #   ];
+    #
+    #   animations = {
+    #     enabled = false;
+    #   };
+    #
+    #   input-field = [
+    #     {
+    #       size = "600, 100";
+    #       position = "0, 0";
+    #       monitor = "";
+    #
+    #       inner_color = "rgba(24,24,36,0.8)";
+    #       outer_color = "rgba(205,214,244,1.0)";
+    #       outline_thickness = 4;
+    #
+    #       font_family = "CaskaydiaMono Nerd Font";
+    #       font_size = 32;
+    #       font_color = "rgba(205,214,244,1.0)";
+    #
+    #       placeholder_color = "rgba(205,214,244,0.6)";
+    #       placeholder_text = "Enter Password";
+    #       check_color = "rgba(68, 157, 171, 1.0)";
+    #       fail_text = "Wrong";
+    #
+    #       rounding = 0;
+    #       shadow_passes = 0;
+    #       fade_on_empty = false;
+    #     }
+    #   ];
+    # };
   };
 
   # Configure top bar in hyprland
   programs.waybar = {
     enable = true;
     systemd.enable = true;
-    # settings = builtins.readFile ./waybar/config.jsonc;
-    style = builtins.readFile ./waybar/style.css;
     package = inputs.waybar.packages.x86_64-linux.waybar;
-  };
-
-  # write waybar config
-  home.file.".config/waybar/config.jsonc".source = ./waybar/config.jsonc;
-  # write power-menu
-  home.file.".config/waybar/power-menu.sh" = {
-    source = ./waybar/power-menu.sh;
-    executable = true;
   };
 
   services.hyprpaper = {
     enable = true;
-    settings = {
-      ipc = "on";
-      splash = false;
-      preload = ["/etc/nixos/nix.png"];
-      wallpaper = [",/etc/nixos/nix.png"];
-    };
+    # settings = {
+    #   ipc = "on";
+    #   splash = false;
+    #   preload = ["/etc/nixos/nix.png"];
+    #   wallpaper = [",/etc/nixos/nix.png"];
+    # };
   };
 
   services.mako = {
@@ -610,33 +606,43 @@ in {
   };
 
   programs.chromium.enable = true;
-  xdg.desktopEntries = {
-    chatgpt = {
-      name = "ChatGPT";
-      comment = "ChatGPT";
-      exec = "chromium --new-window --ozone-platform=wayland --app=https://chatgpt.com/ --name=ChatGPT --class=ChatGPT";
-      terminal = false;
-      type = "Application";
-      icon = builtins.fetchurl {
-        url = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/chatgpt.png";
-        sha256 = "1bgm6b0gljl9kss4f246chblw40a4h4j93bl70a6i0bi05zim22f";
+
+  xdg = {
+    configFile =
+      builtins.mapAttrs
+      (name: subpath: {
+        source = create_symlink "${dotfiles}/${subpath}";
+        recursive = true;
+      })
+      dots;
+
+    desktopEntries = {
+      chatgpt = {
+        name = "ChatGPT";
+        comment = "ChatGPT";
+        exec = "chromium --new-window --ozone-platform=wayland --app=https://chatgpt.com/ --name=ChatGPT --class=ChatGPT";
+        terminal = false;
+        type = "Application";
+        icon = builtins.fetchurl {
+          url = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/chatgpt.png";
+          sha256 = "1bgm6b0gljl9kss4f246chblw40a4h4j93bl70a6i0bi05zim22f";
+        };
+        startupNotify = true;
       };
-      startupNotify = true;
-    };
-    whatsapp = {
-      name = "WhatsApp";
-      comment = "WhatsApp";
-      exec = "chromium --new-window --ozone-platform=wayland --app=https://web.whatsapp.com/ --name=WhatsApp --class=WhatsApp";
-      terminal = false;
-      type = "Application";
-      icon = builtins.fetchurl {
-        url = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/whatsapp.png";
-        sha256 = "1z70kvad27gizhbdr6j4115cks5n0015qvn79hpf56z8nnaf0xm2";
+      whatsapp = {
+        name = "WhatsApp";
+        comment = "WhatsApp";
+        exec = "chromium --new-window --ozone-platform=wayland --app=https://web.whatsapp.com/ --name=WhatsApp --class=WhatsApp";
+        terminal = false;
+        type = "Application";
+        icon = builtins.fetchurl {
+          url = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/whatsapp.png";
+          sha256 = "1z70kvad27gizhbdr6j4115cks5n0015qvn79hpf56z8nnaf0xm2";
+        };
+        startupNotify = true;
       };
-      startupNotify = true;
     };
   };
-
   programs.lutris = {
     enable = true;
     steamPackage = osConfig.programs.steam.package;
