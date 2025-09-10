@@ -92,21 +92,6 @@ in {
       tmuxPlugins.catppuccin
       tmuxPlugins.cpu
     ];
-
-    # file.".config/walker" = {
-    #   source = ./walker;
-    #   recursive = true;
-    # };
-    # activation.copyWalkerConfig =
-    #   lib.hm.dag.entryAfter ["writeBoundary"]
-    #   /*
-    #   bash
-    #   */
-    #   ''
-    #     mkdir -p ~/.config/walker
-    #     cp -rn ${./walker}/* ~/.config/walker/
-    #     chmod -R u+rw ~/.config/walker
-    #   '';
   };
   gtk = {
     enable = true;
@@ -145,14 +130,6 @@ in {
     vscode.profiles.Default.enable = true;
     zsh-syntax-highlighting.enable = true;
   };
-
-  # wayland.windowManager.hyprland = {
-  #   enable = true;
-  #   # extraConfig = builtins.readFile ./hypr/hyprland.conf;
-  #   # plugins = [
-  #   #   inputs.hyprland-plugins.packages."${pkgs.system}".hyprfocus
-  #   # ];
-  # };
 
   # Allow unlocking 1password etc with system authentication
   services.hyprpolkitagent.enable = true;
@@ -259,79 +236,12 @@ in {
         }
       '';
   };
-  # Configure idle times that lock / suspend machine in hyprland
   services.hypridle = {
     enable = true;
-    # settings = {
-    #   general = {
-    #     lock_cmd = "pidof hyprlock || hyprlock";
-    #     before_sleep_cmd = "loginctl lock-session";
-    #     after_sleep_cmd = "hyprctl dispatch dpms on";
-    #   };
-    #
-    #   listener = [
-    #     {
-    #       timeout = 300;
-    #       on-timeout = "loginctl lock-session";
-    #     }
-    #     {
-    #       timeout = 330;
-    #       on-timeout = "hyprctl dispatch dpms off";
-    #       on-resume = "hyprctl dispatch dpms on";
-    #     }
-    #     {
-    #       timeout = 1800;
-    #       on-timeout = "systemctl suspend";
-    #     }
-    #   ];
-    # };
   };
 
-  # Configure lock screen and behaviour in hyprland
   programs.hyprlock = {
     enable = true;
-    # settings = {
-    #   general = {
-    #     disable_loading_bar = true;
-    #     hide_cursor = false;
-    #     no_fade_in = false;
-    #   };
-    #
-    #   background = [
-    #     {
-    #       color = "rgba(24,24,36,1.0)";
-    #     }
-    #   ];
-    #
-    #   animations = {
-    #     enabled = false;
-    #   };
-    #
-    #   input-field = [
-    #     {
-    #       size = "600, 100";
-    #       position = "0, 0";
-    #       monitor = "";
-    #
-    #       inner_color = "rgba(24,24,36,0.8)";
-    #       outer_color = "rgba(205,214,244,1.0)";
-    #       outline_thickness = 4;
-    #
-    #       font_family = "CaskaydiaMono Nerd Font";
-    #       font_size = 32;
-    #       font_color = "rgba(205,214,244,1.0)";
-    #
-    #       placeholder_color = "rgba(205,214,244,0.6)";
-    #       placeholder_text = "Enter Password";
-    #       check_color = "rgba(68, 157, 171, 1.0)";
-    #       fail_text = "Wrong";
-    #
-    #       rounding = 0;
-    #       shadow_passes = 0;
-    #       fade_on_empty = false;
-    #     }
-    #   ];
-    # };
   };
 
   # Configure top bar in hyprland
@@ -343,12 +253,6 @@ in {
 
   services.hyprpaper = {
     enable = true;
-    # settings = {
-    #   ipc = "on";
-    #   splash = false;
-    #   preload = ["/etc/nixos/nix.png"];
-    #   wallpaper = [",/etc/nixos/nix.png"];
-    # };
   };
 
   services.mako = {
@@ -503,7 +407,7 @@ in {
       clipboard-read = "allow";
       clipboard-write = "allow";
       window-theme = "dark";
-      theme = "catppuccin-mocha";
+      # theme = "catppuccin-mocha";
       font-size = 12;
       font-family = "Hack";
     };
