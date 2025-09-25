@@ -6,37 +6,36 @@
   inputs,
   ...
 }: let
-  customOhMyZshTheme =
-    /*
-    bash
-    */
-    ''
-      autoload -Uz vcs_info
-
-      zstyle ':vcs_info:*' stagedstr '%F{green}●'
-      zstyle ':vcs_info:*' unstagedstr '%F{yellow}●'
-      zstyle ':vcs_info:*' check-for-changes true
-      zstyle ':vcs_info:svn:*' branchformat '%b'
-      zstyle ':vcs_info:svn:*' formats ' [%b%F{1}:%F{11}%i%c%u%B%F{green}]'
-      zstyle ':vcs_info:*' enable git svn
-
-      theme_precmd () {
-        if [[ -z $(git ls-files --other --exclude-standard 2> /dev/null) ]]; then
-          zstyle ':vcs_info:git:*' formats ' [%b%c%u%B%F{green}]'
-        else
-          zstyle ':vcs_info:git:*' formats ' [%b%c%u%B%F{red}●%F{green}]'
-        fi
-
-        vcs_info
-      }
-
-      setopt prompt_subst
-      PROMPT='[%*] %B%F{magenta}%~%B%F{green}''${vcs_info_msg_0_}%B%F{magenta} %{$reset_color%}%% '
-
-      autoload -U add-zsh-hook
-      add-zsh-hook precmd  theme_precmd
-    '';
-
+  # customOhMyZshTheme =
+  #   /*
+  #   bash
+  #   */
+  #   ''
+  #     autoload -Uz vcs_info
+  #
+  #     zstyle ':vcs_info:*' stagedstr '%F{green}●'
+  #     zstyle ':vcs_info:*' unstagedstr '%F{yellow}●'
+  #     zstyle ':vcs_info:*' check-for-changes true
+  #     zstyle ':vcs_info:svn:*' branchformat '%b'
+  #     zstyle ':vcs_info:svn:*' formats ' [%b%F{1}:%F{11}%i%c%u%B%F{green}]'
+  #     zstyle ':vcs_info:*' enable git svn
+  #
+  #     theme_precmd () {
+  #       if [[ -z $(git ls-files --other --exclude-standard 2> /dev/null) ]]; then
+  #         zstyle ':vcs_info:git:*' formats ' [%b%c%u%B%F{green}]'
+  #       else
+  #         zstyle ':vcs_info:git:*' formats ' [%b%c%u%B%F{red}●%F{green}]'
+  #       fi
+  #
+  #       vcs_info
+  #     }
+  #
+  #     setopt prompt_subst
+  #     PROMPT='[%*] %B%F{magenta}%~%B%F{green}''${vcs_info_msg_0_}%B%F{magenta} %{$reset_color%}%% '
+  #
+  #     autoload -U add-zsh-hook
+  #     add-zsh-hook precmd  theme_precmd
+  #   '';
   dotfiles = "${config.home.homeDirectory}/nixos-dotfiles/config";
   create_symlink = path: config.lib.file.mkOutOfStoreSymlink path;
   dots = {
@@ -44,6 +43,7 @@
     waybar = "waybar";
     swayosd = "swayosd";
     walker = "walker";
+    starship = "starship";
   };
 in {
   home = {
@@ -51,22 +51,22 @@ in {
     homeDirectory = "/home/john";
     stateVersion = "25.05";
 
-    # write oh-my-zsh theme file
-    file.".oh-my-zsh/custom/themes/sentros.zsh-theme".text = customOhMyZshTheme;
-
-    # zsh-peco-history plugin for oh-my-zsh
-    file.".oh-my-zsh/custom/plugins/zsh-peco-history".source = pkgs.fetchgit {
-      url = "https://github.com/jimeh/zsh-peco-history.git";
-      rev = "73615968d46cf172931946b00f89a59da0c124a5";
-      sha256 = "sha256-lEgisjuLrnetIUG0fXl9vH3/ZHgpyQviy7rJazCkMTs=";
-    };
-
-    # zsh fast-syntax-highlighting plugin
-    file.".oh-my-zsh/custom/plugins/fast-syntax-highlighting".source = pkgs.fetchgit {
-      url = "https://github.com/zdharma-continuum/fast-syntax-highlighting.git";
-      rev = "3d574ccf48804b10dca52625df13da5edae7f553";
-      sha256 = "sha256-ZihUL4JAVk9V+IELSakytlb24BvEEJ161CQEHZYYoSA=";
-    };
+    # # write oh-my-zsh theme file
+    # file.".oh-my-zsh/custom/themes/sentros.zsh-theme".text = customOhMyZshTheme;
+    #
+    # # zsh-peco-history plugin for oh-my-zsh
+    # file.".oh-my-zsh/custom/plugins/zsh-peco-history".source = pkgs.fetchgit {
+    #   url = "https://github.com/jimeh/zsh-peco-history.git";
+    #   rev = "73615968d46cf172931946b00f89a59da0c124a5";
+    #   sha256 = "sha256-lEgisjuLrnetIUG0fXl9vH3/ZHgpyQviy7rJazCkMTs=";
+    # };
+    #
+    # # zsh fast-syntax-highlighting plugin
+    # file.".oh-my-zsh/custom/plugins/fast-syntax-highlighting".source = pkgs.fetchgit {
+    #   url = "https://github.com/zdharma-continuum/fast-syntax-highlighting.git";
+    #   rev = "3d574ccf48804b10dca52625df13da5edae7f553";
+    #   sha256 = "sha256-ZihUL4JAVk9V+IELSakytlb24BvEEJ161CQEHZYYoSA=";
+    # };
 
     packages = with pkgs; [
       bat
@@ -91,6 +91,8 @@ in {
       qdirstat
       tmuxPlugins.catppuccin
       tmuxPlugins.cpu
+      heroic
+      starship
     ];
   };
   gtk = {
@@ -126,6 +128,7 @@ in {
     firefox.enable = true;
     fzf.enable = true;
     ghostty.enable = true;
+    # starship.enable = true;
     thunderbird.enable = true;
     vscode.profiles.Default.enable = true;
     zsh-syntax-highlighting.enable = true;
@@ -297,7 +300,8 @@ in {
     autosuggestion.enable = true;
     enableCompletion = true;
     localVariables = {
-      ZSH_CUSTOM = "${config.home.homeDirectory}/.oh-my-zsh/custom";
+      #   ZSH_CUSTOM = "${config.home.homeDirectory}/.oh-my-zsh/custom";
+      STARSHIP_CONFIG = "${config.home.homeDirectory}/.config/starship/starship.toml";
     };
     shellAliases = {
       nrs = "nh os switch -a -u /etc/nixos";
@@ -316,16 +320,19 @@ in {
       ignoreDups = true;
       ignoreSpace = true;
     };
-    oh-my-zsh = {
-      enable = true;
-      plugins = [
-        "git"
-        "sudo"
-        "zsh-peco-history"
-        "fast-syntax-highlighting"
-      ];
-      theme = "sentros";
-    };
+    # oh-my-zsh = {
+    #   enable = true;
+    #   plugins = [
+    #     "git"
+    #     "sudo"
+    #     "zsh-peco-history"
+    #     "fast-syntax-highlighting"
+    #   ];
+    #   theme = "sentros";
+    # };
+  };
+  programs.starship = {
+    enable = true;
   };
 
   programs.tmux = {
