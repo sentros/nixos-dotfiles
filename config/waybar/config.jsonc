@@ -23,7 +23,8 @@
         "pulseaudio",
         "cpu",
         "memory",
-        "temperature",
+        // "temperature",
+        "battery",
         "custom/power-menu",
     ],
     "custom/left": {
@@ -91,7 +92,6 @@
 
     "cpu": {
         "format": "󰍛 {usage}%",
-        "tooltip": false,
         "interval": 5,
         "min-length": 6,
         "max-length": 6,
@@ -105,18 +105,34 @@
         },
         "format": "󰘚 {percentage}%",
         "format-critical": "󰀦 {percentage}%",
-        "tooltip": false,
         "interval": 5,
         "min-length": 7,
         "max-length": 7,
     },
 
     "temperature": {
-        "hwmon-path": "/sys/class/hwmon/hwmon2/temp13_input",
+        // "hwmon-path": "/sys/class/hwmon/hwmon2/temp13_input",
         "critical-threshold": 95,
         "format": "{temperatureC}°C ",
     },
-
+    "battery": {
+        "format": "{capacity}% {icon}",
+        "format-discharging": "{capacity}% {icon}",
+        "format-charging": "{capacity}% {icon}",
+        "format-plugged": "",
+        "format-icons": {
+            "charging": ["󰢜", "󰂆", "󰂇", "󰂈", "󰢝", "󰂉", "󰢞", "󰂊", "󰂋", "󰂅"],
+            "default": ["󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
+        },
+        "format-full": "󰂅",
+        "tooltip-format-discharging": "{power:>1.0f}W↓ {capacity}%",
+        "tooltip-format-charging": "{power:>1.0f}W↑ {capacity}%",
+        "interval": 5,
+        "states": {
+            "warning": 20,
+            "critical": 10,
+        },
+    },
     "bluetooth": {
         "format": "",
         "format-disabled": "󰂲",
@@ -135,7 +151,7 @@
     "pulseaudio": {
         "format": "󰋋 {volume}%",
         "format-muted": "󰝟 {volume}%",
-        "scroll-step": 5,
+        "scroll-step": 1,
         "on-click": "pavucontrol",
         "tooltip-format": "Playing at {volume}%",
         "on-click-right": "swayosd-client --output-volume mute-toggle",
