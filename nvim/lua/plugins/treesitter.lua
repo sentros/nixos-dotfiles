@@ -23,6 +23,7 @@ return {
                 "hyprlang",
                 "tmux",
                 "ini",
+                "kdl",
             },
             auto_install = false,
         })
