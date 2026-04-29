@@ -23,7 +23,7 @@
         "pulseaudio",
         "cpu",
         "memory",
-        // "temperature",
+        "temperature",
         "battery",
         "custom/power-menu",
     ],
@@ -111,8 +111,9 @@
     },
 
     "temperature": {
-        // "hwmon-path": "/sys/class/hwmon/hwmon2/temp13_input",
+        "hwmon-path": "/sys/class/hwmon/hwmon5/temp1_input",
         "critical-threshold": 95,
+        "interval": 1,
         "format": "{temperatureC}°C ",
     },
     "battery": {
