@@ -1,0 +1,4 @@
+[misc]
+disable = ["git_repos"]
+[containers]
+ignored_containers = ["work.stenros.net:5050/*"]
