@@ -1,0 +1,11 @@
+hl.on("hyprland.start", function()
+  hl.exec_cmd("ghostty -e tmux", { workspace = "1", silent = true })
+  hl.exec_cmd("firefox", { workspace = "1", silent = true })
+  hl.exec_cmd("code", { workspace = "2", silent = true })
+  hl.exec_cmd("Telegram", { workspace = "3", silent = true })
+
+  hl.exec_cmd("uwsm-app -- elephant")
+  hl.exec_cmd("uwsm-app -- walker --gapplication-service")
+  hl.exec_cmd("uwsm-app -- waybar")
+  hl.exec_cmd("uwsm-app -- swayosd-server")
+end)
