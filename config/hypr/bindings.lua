@@ -41,7 +41,7 @@ hl.bind(mainMod .. " + DOWN", hl.dsp.focus({ direction = "d" }), { description =
 -- Move active window to a workspace silently with mainMod + SHIFT + ALT + [0-9]
 for workspace = 1, 10 do
   local key = "code:" .. tostring(workspace + 9)
-  hl.bind(mainMod .. key, hl.dsp.focus({ workspace = tostring(workspace) }), { description = "Switch to workspace " .. workspace })
+  hl.bind(mainMod .. " + " .. key, hl.dsp.focus({ workspace = tostring(workspace) }), { description = "Switch to workspace " .. workspace })
   hl.bind(mainMod .. " + SHIFT + " .. key, hl.dsp.window.move({ workspace = tostring(workspace) }), { description = "Move window to workspace " .. workspace })
   hl.bind(mainMod .. " + SHIFT + ALT + " .. key, hl.dsp.window.move({ workspace = tostring(workspace), follow = false }), { description = "Move window silently to workspace " .. workspace })
 end

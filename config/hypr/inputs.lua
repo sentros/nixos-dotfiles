@@ -1,5 +1,4 @@
 -- https://wiki.hyprland.org/Configuring/Variables/--input
-
 hl.config({
   input = {
     kb_layout = "fi",
@@ -12,9 +11,8 @@ hl.config({
 
     touchpad = {
       natural_scroll = false,
-        tap-to-click = false
-        clickfinger_behavior = true
-        clickfinger_behavior = true
+      tap_to_click = false,
+      clickfinger_behavior = true,
     },
   },
   misc = {
