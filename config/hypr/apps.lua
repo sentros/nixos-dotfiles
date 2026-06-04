@@ -1,0 +1,6 @@
+require("apps.1password")
+require("apps.browser")
+require("apps.ghostty")
+require("apps.steam")
+require("apps.system")
+require("apps.walker")

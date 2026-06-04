@@ -24,7 +24,7 @@
         "cpu",
         "memory",
         "temperature",
-        "battery",
+        // "battery",
         "custom/power-menu",
     ],
     "custom/left": {
@@ -111,29 +111,29 @@
     },
 
     "temperature": {
-        "hwmon-path": "/sys/class/hwmon/hwmon5/temp1_input",
+        "hwmon-path": "/sys/class/hwmon/hwmon4/temp2_input",
         "critical-threshold": 95,
         "interval": 1,
         "format": "{temperatureC}°C ",
     },
-    "battery": {
-        "format": "{capacity}% {icon}",
-        "format-discharging": "{capacity}% {icon}",
-        "format-charging": "{capacity}% {icon}",
-        "format-plugged": "",
-        "format-icons": {
-            "charging": ["󰢜", "󰂆", "󰂇", "󰂈", "󰢝", "󰂉", "󰢞", "󰂊", "󰂋", "󰂅"],
-            "default": ["󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
-        },
-        "format-full": "󰂅",
-        "tooltip-format-discharging": "{power:>1.0f}W↓ {capacity}%",
-        "tooltip-format-charging": "{power:>1.0f}W↑ {capacity}%",
-        "interval": 5,
-        "states": {
-            "warning": 20,
-            "critical": 10,
-        },
-    },
+    // "battery": {
+    //     "format": "{capacity}% {icon}",
+    //     "format-discharging": "{capacity}% {icon}",
+    //     "format-charging": "{capacity}% {icon}",
+    //     "format-plugged": "",
+    //     "format-icons": {
+    //         "charging": ["󰢜", "󰂆", "󰂇", "󰂈", "󰢝", "󰂉", "󰢞", "󰂊", "󰂋", "󰂅"],
+    //         "default": ["󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
+    //     },
+    //     "format-full": "󰂅",
+    //     "tooltip-format-discharging": "{power:>1.0f}W↓ {capacity}%",
+    //     "tooltip-format-charging": "{power:>1.0f}W↑ {capacity}%",
+    //     "interval": 5,
+    //     "states": {
+    //         "warning": 20,
+    //         "critical": 10,
+    //     },
+    // },
     "bluetooth": {
         "format": "",
         "format-disabled": "󰂲",

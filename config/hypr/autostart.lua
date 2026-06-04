@@ -1,0 +1,13 @@
+hl.on("hyprland.start", function()
+  hl.exec_cmd("ghostty -e tmux", { workspace = "1" })
+  hl.exec_cmd("firefox", { workspace = "1" })
+  hl.exec_cmd("steam", { workspace = "2" })
+  hl.exec_cmd("Telegram", { workspace = "3" })
+
+  hl.exec_cmd("uwsm-app -- elephant")
+  hl.exec_cmd("uwsm-app -- walker --gapplication-service")
+  hl.exec_cmd("uwsm-app -- waybar")
+  hl.exec_cmd("uwsm-app -- swayosd-server")
+  hl.exec_cmd("uwsm-app -- hyprpaper")
+  hl.exec_cmd("uwsm-app -- nm-applet --indicator")
+end)
